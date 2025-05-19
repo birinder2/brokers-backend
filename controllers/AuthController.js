@@ -105,7 +105,7 @@ module.exports = function (app) {
 	
 		try {
 			//Check if user exists
-			const user = await BackendUserLogin.findOne({ email, role: 'developer' });
+			const user = await BackendUserLogin.findOne({ email, role: 'salesman' });
 			console.log("user",user);
 	
 			if (!user) {
@@ -120,16 +120,16 @@ module.exports = function (app) {
 			}
 	
 			// Set session
-			req.session.developer_id = user._id;
+			req.session.broker_id = user._id;
 			const token = jwt.sign(
-				{ developerId: user._id },
+				{ brokerId: user._id },
 					process.env.TOKEN_KEY,
 				{
 				  expiresIn: process.env.TOKEN_EXPIRY || '1h',
 				}
 			  );
 			//res.cookie("token", token);
-			res.cookie('developer_token',token,{
+			res.cookie('broker_token',token,{
 				maxAge: 1 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
 				httpOnly:true,
 				secure:false
@@ -160,7 +160,7 @@ module.exports = function (app) {
 	});
 
 	app.get('/logout', function (req, res) {
-		res.clearCookie("developer_token");
+		res.clearCookie("broker_token");
     	req.session.destroy((err) => {
 			if (err) {
 				console.error("Error destroying session:", err);

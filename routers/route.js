@@ -11,7 +11,7 @@ module.exports = function (app) {
 
       function isUserAllowed(req, res, next) {
             sess = req.session;
-            if (sess.developer_id) {
+            if (sess.broker_id) {
                   return next();
             } else {
                    res.redirect('/login'); 
@@ -19,68 +19,19 @@ module.exports = function (app) {
       }
 
       // Laik routes
-      app.get('/', isUserAllowed,authenticateJWT,authorizeRoles('developer'), function (req, res) {
+      app.get('/', isUserAllowed,authenticateJWT,authorizeRoles('salesman'), function (req, res) {
             res.locals = { title: 'Dashboard' };
             res.render('Dashboard/index');
       });
 
       // Buildings
-      app.get('/building-list', isUserAllowed,authenticateJWT,authorizeRoles('developer'), function (req, res) {
+      app.get('/building-list', isUserAllowed,authenticateJWT,authorizeRoles('salesman'), function (req, res) {
             const developerId = req.user._id;
             res.locals = { title: 'Building Lists' };
             res.render('Building/building-list',{developerId});
       });
 
-      app.get('/properties/data',isUserAllowed,authenticateJWT,authorizeRoles('developer'),propertiesController.properties);
-
-      app.get('/addEditProperty',isUserAllowed, authenticateJWT,authorizeRoles('developer'), propertiesController.editProperties);
-
-      app.post('/addProperty', authenticateJWT, authorizeRoles('developer'), propertiesController.addProperties);
-
-      app.put('/updateProperty/:id', authenticateJWT, authorizeRoles('developer'), propertiesController.updateProperties);
-
-      app.delete('/deleteProperty/:id', authenticateJWT, authorizeRoles('developer'), propertiesController.deleteProperty);
-
-
-      
-
-      app.post('/upload-property-image', authenticateJWT, authorizeRoles('developer'), propertiesController.uploadPropertyImages);
-
-      app.get('/viewPropertyImages', authenticateJWT, authorizeRoles('developer'), propertiesController.viewUploadPropertyImage);
-
-      // Get images by building ID
-      app.get('/list-images/:id',authenticateJWT, authorizeRoles('developer'), propertiesController.listImages);
-
-      // Delete an image by ID
-      app.delete('/delete-property-image/:imageId',authenticateJWT, authorizeRoles('developer'), propertiesController.deleteImage);
-
-      app.delete('/delete-multiple-images', authenticateJWT, authorizeRoles('developer'),propertiesController.deleteMultipleImages);
-
-
-      app.put('/update-image-status',authenticateJWT, authorizeRoles('developer'), propertiesController.updateImageStatus);
-
-      app.post('/setDefaultImge',authenticateJWT, authorizeRoles('developer'), propertiesController.setDefaultImge);
-
-      app.post('/updateImageInfo',authenticateJWT, authorizeRoles('developer'), propertiesController.updateImageInfo);
-
-
-      //Floor images
-      app.post('/upload-property-floor-image', authenticateJWT, authorizeRoles('developer'), propertiesController.uploadPropertyFloorImages);
-
-      app.get('/viewPropertyFloorImages', authenticateJWT, authorizeRoles('developer'), propertiesController.viewUploadPropertyFloorImage);
-
-      // Get images by building ID
-      app.get('/list-floor-images/:id',authenticateJWT, authorizeRoles('developer'), propertiesController.listFloorImages);
-
-      // Delete an floor image by ID
-      app.delete('/delete-property-floor-image/:imageId',authenticateJWT, authorizeRoles('developer'), propertiesController.deleteFloorImage);
-
-       app.delete('/delete-multiple-floor-images', authenticateJWT, authorizeRoles('developer'),propertiesController.deleteMultipleFloorPlans);
-
-
-      app.put('/update-floor-image-status',authenticateJWT, authorizeRoles('developer'), propertiesController.updateFloorImageStatus);
-
-       app.post('/updateImageFloorInfo',authenticateJWT, authorizeRoles('developer'), propertiesController.updateImageFloorInfo);
+     
       
       app.get('/building-edit', isUserAllowed, function (req, res) {
             res.locals = { title: 'Building Edit' };

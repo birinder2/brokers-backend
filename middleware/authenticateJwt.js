@@ -26,9 +26,9 @@ const BackendUserLogin = require("../models/BackendUserLogin");
 
 const authenticateJWT = async (req,res,next) => {
     try {
-        const authHeader = req.cookies.developer_token;
+        const authHeader = req.cookies.broker_token;
         if(!authHeader){
-            res.clearCookie("developer_token");
+            res.clearCookie("broker_token");
             if (req.session) req.session.destroy();
             if (req.xhr || req.headers.accept.indexOf('json') > -1) {
                 return res.status(401).json({ success: false, message: 'Unauthorized' });
@@ -40,10 +40,10 @@ const authenticateJWT = async (req,res,next) => {
         //let decode = await jwt.verify(authHeader,process.env.TOKEN_KEY);
         let decode = await verifyTokenAsync(authHeader, process.env.TOKEN_KEY);
 
-        const userId = decode.developerId;
+        const userId = decode.brokerId;
         const user = await BackendUserLogin.findById(userId);
         if(!user){
-            res.clearCookie("developer_token");
+            res.clearCookie("broker_token");
             if (req.session) req.session.destroy();
             if (req.xhr || req.headers.accept.indexOf('json') > -1) {
                 return res.status(401).json({ success: false, message: 'User not found' });

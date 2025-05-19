@@ -82,6 +82,6 @@ app.get('/', function (req, res) {
   res.redirect('/');
 });
 
-http.listen(3001, function () {
-  console.log('listening on *:3001');
+http.listen(process.env.PORT, function () {
+  console.log('listening on *:' + process.env.PORT);
 });
