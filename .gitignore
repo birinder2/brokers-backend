@@ -1,0 +1,7 @@
+node_modules
+package-lock.json
+public/laik-staging-b9958643e415.json
+.env
+
+# System Files
+.DS_Store

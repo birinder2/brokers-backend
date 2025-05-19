@@ -1,0 +1,16 @@
+  /* My aditional stypes */
+  .sticky-save-container {
+    position: fixed;
+    top: 71px;
+    z-index: 999;
+    width: calc(100% - 240px);
+    padding: 10px 20px;
+    background-color: #ffffff;
+    left: 240px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.vertical-collpsed .sticky-save-container  {
+    width: calc(100% - 70px);
+    left: 70px;
+}

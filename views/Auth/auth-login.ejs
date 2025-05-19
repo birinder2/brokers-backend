@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+    
+        <meta charset="utf-8">
+        <title>Login | Laik - Admin & Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="Laik Admin Portal – Manage Properties, Users & Data" name="description">
+        <meta content="Themesbrand" name="author">
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="public/assets/images/favicon.ico">
+    
+        <%- include ('../Partials/HeaderStyle') %>
+    
+    </head>
+
+    <body>
+
+        <!-- Loader -->
+        <div id="preloader"><div id="status"><div class="spinner"></div></div></div>
+
+        <!-- Begin page -->
+        <div class="accountbg" style="background: url('public/assets/images/bg-2.jpg');background-size: cover;background-position: center;"></div>
+
+        <div class="wrapper-page account-page-full">
+
+            <div class="card shadow-none">
+                <div class="card-block">
+
+                    <div class="account-box">
+
+                        <div class="card-box shadow-none p-4">
+                            <div class="p-2">
+                                <div class="text-center mt-4 mb-4">
+                                    <a href="/"><img src="public/assets/images/logo.svg" height="40" alt="logo"></a>
+                                </div>
+
+                                <h4 class="font-size-18 mt-2 text-center">Sign In to Continue</h4>
+                                <p class="text-muted text-center mb-4">Access your Laik developer account below.</p>
+                                <% if(error.length> 0) { %>
+                                    <div class="alert alert-danger text-center mb-4 flash" role="alert">
+                                        <%= error %>
+                                    </div>
+                                <% } %>
+                                <% if(message.length> 0) { %>
+                                    <div class="alert alert-success text-center mb-4 flash" role="alert">
+                                        <%= message %>
+                                    </div>
+                                <% } %>
+                              <form class="mt-4" id="loginForm">
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="email">Email</label>
+                                    <input type="text" class="form-control" id="email" name="email" placeholder="Enter email" value="">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="userpassword">Password</label>
+                                    <input type="password" class="form-control" id="password" placeholder="Enter password" name="password" value="">
+                                </div>
+    
+                                <div class="mb-3 row">
+                                    <div class="col-sm-12 text-end">
+                                        <button class="btn btn-primary w-100 waves-effect waves-light" type="submit">Log In</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="mt-5 pt-4 text-center position-relative">
+                                <p><script>document.write(new Date().getFullYear())</script> © Laik. </p>
+                            </div>
+
+                        </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    
+        <%- include ('../Partials/VendorScript') %>
+
+        <script src="public/assets/js/app.js"></script>
+         <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- jQuery Validation plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    </body>
+</html>
+
+    <script>
+      var setTimeoutVar;
+      function showNotification(type, message) {
+        var cssClass, icon;
+        if (type == "success") {
+          cssClass = "alert-success";
+          icon = "fa-check-circle";
+        } else if (type == "info") {
+          cssClass = "alert-info";
+          icon = "fa-info-circle";
+        } else if (type == "warning") {
+          cssClass = "alert-warning";
+          icon = "fa-exclamation-triangle";
+        } else if (type == "danger") {
+          cssClass = "alert-danger";
+          icon = "fa-times-circle";
+        } else {
+          cssClass = "alert-primary";
+          icon = "fa-thumbs-up";
+        }
+        clearTimeout(setTimeoutVar);
+        jQuery(".alert").removeClass(
+          "alert-success alert-info alert-warning alert-danger alert-primary"
+        );
+        jQuery(".alert").fadeIn();
+        jQuery(".alert").addClass(cssClass);
+        jQuery(".notificationIcon").addClass(icon);
+        jQuery(".notificationText").html(message);
+        setTimeoutVar = setTimeout(function () {
+          jQuery(".alert").fadeOut();
+          jQuery(".alert").removeClass(cssClass);
+          jQuery(".notificationIcon").removeClass(icon);
+        }, 5000);
+      }
+      $("#loginForm").validate({
+        rules: {
+          email: {
+            required: true,
+            email: true,
+          },
+          password: {
+            required: true,
+          },
+        },
+        messages: {
+          email: {
+            required: "Email is required!",
+            email: "Please enter vaild email address!",
+          },
+          password: {
+            required: "Password is required!",
+          },
+        },
+        errorPlacement: function (error, element) {
+          if (element.attr("name") == "password") {
+            error.appendTo(element.parent("div").parent("div"));
+          } else {
+            error.insertAfter(element);
+          }
+        },
+        submitHandler: function () {
+          let data = {
+            email: $("#email").val(),
+            password: $("#password").val(),
+          };
+          let url = `/post-login`;
+          jQuery.ajax({
+            url: url,
+            type: "POST", //send it through get method
+            contentType: "application/json", // Tell server we're sending JSON
+            data: JSON.stringify(data), // Convert JS object to JSON string
+            xhrFields: {
+              withCredentials: true, // Send cookies (JWT) with the request
+            },
+            beforeSend: function () {
+              jQuery(".loader").fadeIn();
+            },
+            complete: function () {
+              jQuery(".loader").fadeOut();
+            },
+            success: function (response) {
+              console.log("response", response);
+              if (response.status == "success") {
+                showNotification("success", `Redirecting to dashboard!`);
+                setTimeout(function () {
+                  window.location.href = "/";
+                }, 2000);
+              } else {
+                Swal.fire("Error!", `${response.message}`, "error");
+              }
+            },
+            error: function (xhr) {
+              Swal.fire(
+                "Error!",
+                `Something went wrong! An error occured`,
+                "error"
+              );
+              return false;
+            },
+          });
+          return false;
+        },
+      });
+    </script>

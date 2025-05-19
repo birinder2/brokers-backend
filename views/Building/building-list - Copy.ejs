@@ -1,0 +1,220 @@
+<%- contentFor('HeaderCss') %>
+    <!-- DataTables -->
+    <link href="public/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
+    <link href="public/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet"
+        type="text/css">
+
+<%- contentFor('breadcrumb') %>
+
+<%- contentFor('body') %>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <table id="datatable" class="table table-striped table-centered dt-responsive table-vertical" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#60735</td>
+                                <td class="product-list-img">
+                                    <img src="https://static.orulo.com.br/images/properties/thumb/1905421.png?1727270733" class="img-fluid avatar-md rounded" alt="tbl">
+                                </td>
+                                <td>
+                                    <h6 class="mt-0 mb-1">Aire Alto de Pinheiros</h6>
+                                    <p class="m-0 font-size-14">Um empreendimento completo com toda segurança...</p>
+                                </td>
+                                <td>Rua Pereira Leite, 118, <span class="d-block"></span> Sumarezinho, São Paulo, SP 05442-000</td>
+                                <td><span class="badge bg-success">Published</span></td>
+                                <td>
+                                    <a href="/building-edit" class="me-3 text-muted"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                    <a href="javascript:void(0);" class="text-muted"><i class="mdi mdi-close font-size-18"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#63069</td>
+                                <td class="product-list-img">
+                                    <img src="https://static.orulo.com.br/images/properties/thumb/1994801.jpeg?1731045236" class="img-fluid avatar-md rounded" alt="tbl">
+                                </td>
+                                <td>
+                                    <h6 class="mt-0 mb-1">BPA 660 Apto theremaxcollection-Y3VDU</h6>
+                                    <p class="m-0 font-size-14">Apartamento à venda no Condomínio Vertical Villagio Arandu...</p>
+                                </td>
+                                <td>Rua Arandu, 660, Brooklin Paulista, <span class="d-block"></span> São Paulo, SP 04562-031</td>
+                                <td><span class="badge bg-danger">Inactive</span></td>
+                                <td>
+                                    <a href="/building-edit" class="me-3 text-muted"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                    <a href="javascript:void(0);" class="text-muted"><i class="mdi mdi-close font-size-18"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#65397</td>
+                                <td class="product-list-img">
+                                    <img src="https://static.orulo.com.br/images/properties/thumb/2075757.jpeg?1736400534" class="img-fluid avatar-md rounded" alt="tbl">
+                                </td>
+                                <td>
+                                    <h6 class="mt-0 mb-1">BSA 3696 Sala 601361003-166</h6>
+                                    <p class="m-0 font-size-14">Prédio Comercial à Venda em Localização Estratégica no Campo...</p>
+                                </td>
+                                <td>Avenida Santo Amaro, 3696, Brooklin, <span class="d-block"></span> Paulista, São Paulo, SP 04555-002</td>
+                                <td><span class="badge bg-danger">Inactive</span></td>
+                                <td>
+                                    <a href="/building-edit" class="me-3 text-muted"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                    <a href="javascript:void(0);" class="text-muted"><i class="mdi mdi-close font-size-18"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#49443</td>
+                                <td class="product-list-img">
+                                    <img src="https://static.orulo.com.br/images/properties/thumb/1559995.jpg?1697831668" class="img-fluid avatar-md rounded" alt="tbl">
+                                </td>
+                                <td>
+                                    <h6 class="mt-0 mb-1">Beatriz Alto de Pinheiros</h6>
+                                    <p class="m-0 font-size-14">Um empreendimento completo com toda segurança...</p>
+                                </td>
+                                <td>Rua Pascoal Vita, 331, Alto de Pinheiros, <span class="d-block"></span> São Paulo, SP 05445-000</td>
+                                <td><span class="badge bg-success">Published</span></td>
+                                <td>
+                                    <a href="/building-edit" class="me-3 text-muted"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                    <a href="javascript:void(0);" class="text-muted"><i class="mdi mdi-close font-size-18"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#65397</td>
+                                <td class="product-list-img">
+                                    <img src="https://static.orulo.com.br/images/properties/thumb/949842.jpg?1651761383" class="img-fluid avatar-md rounded" alt="tbl">
+                                </td>
+                                <td>
+                                    <h6 class="mt-0 mb-1">Bioma Itaim</h6>
+                                    <p class="m-0 font-size-14">Um empreendimento completo com toda segurança...</p>
+                                </td>
+                                <td>Rua Clodomiro Amazonas, 121, <span class="d-block"></span> Itaim Bibi, São Paulo, SP 04537-010</td>
+                                <td><span class="badge bg-success">Published</span></td>
+                                <td>
+                                    <a href="/building-edit" class="me-3 text-muted"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                    <a href="javascript:void(0);" class="text-muted"><i class="mdi mdi-close font-size-18"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#65397</td>
+                                <td class="product-list-img">
+                                    <img src="https://static.orulo.com.br/images/properties/thumb/2135079.jpeg?1741843994" class="img-fluid avatar-md rounded" alt="tbl">
+                                </td>
+                                <td>
+                                    <h6 class="mt-0 mb-1">Bloco B Apto AP02531</h6>
+                                    <p class="m-0 font-size-14">Apartamento de 45m2 para venda com 2 dormitórios...</p>
+                                </td>
+                                <td>Avenida Doutor Francisco Mesquita, <span class="d-block"></span> 1213, Quinta da Paineira, São Paulo, SP 03153-002</td>
+                                <td><span class="badge bg-success">Published</span></td>
+                                <td>
+                                    <a href="/building-edit" class="me-3 text-muted"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                    <a href="javascript:void(0);" class="text-muted"><i class="mdi mdi-close font-size-18"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#65397</td>
+                                <td class="product-list-img">
+                                    <img src="https://static.orulo.com.br/images/properties/thumb/2075757.jpeg?1736400534" class="img-fluid avatar-md rounded" alt="tbl">
+                                </td>
+                                <td>
+                                    <h6 class="mt-0 mb-1">CBBDV 257 Apto theremaxcollection-CZE69</h6>
+                                    <p class="m-0 font-size-14">Em uma rua arborizada e tranquila este apartamento tem...</p>
+                                </td>
+                                <td>Rua Barão de Vallim, 257, <span class="d-block"></span> Campo Belo, São Paulo, SP 04613-030</td>
+                                <td><span class="badge bg-success">Published</span></td>
+                                <td>
+                                    <a href="/building-edit" class="me-3 text-muted"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                    <a href="javascript:void(0);" class="text-muted"><i class="mdi mdi-close font-size-18"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#65397</td>
+                                <td class="product-list-img">
+                                    <img src="https://static.orulo.com.br/images/properties/thumb/2075757.jpeg?1736400534" class="img-fluid avatar-md rounded" alt="tbl">
+                                </td>
+                                <td>
+                                    <h6 class="mt-0 mb-1">	BSA 3696 Sala 601361003-166</h6>
+                                    <p class="m-0 font-size-14">Prédio Comercial à Venda em Localização Estratégica no Campo...</p>
+                                </td>
+                                <td>Avenida Santo Amaro, 3696, <span class="d-block"></span> Brooklin, Paulista, São Paulo, SP 04555-002</td>
+                                <td><span class="badge bg-success">Published</span></td>
+                                <td>
+                                    <a href="/building-edit" class="me-3 text-muted"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                    <a href="javascript:void(0);" class="text-muted"><i class="mdi mdi-close font-size-18"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#65397</td>
+                                <td class="product-list-img">
+                                    <img src="https://static.orulo.com.br/images/properties/thumb/2075757.jpeg?1736400534" class="img-fluid avatar-md rounded" alt="tbl">
+                                </td>
+                                <td>
+                                    <h6 class="mt-0 mb-1">	BSA 3696 Sala 601361003-166</h6>
+                                    <p class="m-0 font-size-14">Prédio Comercial à Venda em Localização Estratégica no Campo...</p>
+                                </td>
+                                <td>Avenida Santo Amaro, 3696, <span class="d-block"></span> Brooklin, Paulista, São Paulo, SP 04555-002</td>
+                                <td><span class="badge bg-success">Published</span></td>
+                                <td>
+                                    <a href="/building-edit" class="me-3 text-muted"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                    <a href="javascript:void(0);" class="text-muted"><i class="mdi mdi-close font-size-18"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#65397</td>
+                                <td class="product-list-img">
+                                    <img src="https://static.orulo.com.br/images/properties/thumb/2075757.jpeg?1736400534" class="img-fluid avatar-md rounded" alt="tbl">
+                                </td>
+                                <td>
+                                    <h6 class="mt-0 mb-1">	BSA 3696 Sala 601361003-166</h6>
+                                    <p class="m-0 font-size-14">Prédio Comercial à Venda em Localização Estratégica no Campo...</p>
+                                </td>
+                                <td>Avenida Santo Amaro, 3696, <span class="d-block"></span> Brooklin, Paulista, São Paulo, SP 04555-002</td>
+                                <td><span class="badge bg-success">Published</span></td>
+                                <td>
+                                    <a href="/building-edit" class="me-3 text-muted"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                    <a href="javascript:void(0);" class="text-muted"><i class="mdi mdi-close font-size-18"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#65397</td>
+                                <td class="product-list-img">
+                                    <img src="https://static.orulo.com.br/images/properties/thumb/2075757.jpeg?1736400534" class="img-fluid avatar-md rounded" alt="tbl">
+                                </td>
+                                <td>
+                                    <h6 class="mt-0 mb-1">	BSA 3696 Sala 601361003-166</h6>
+                                    <p class="m-0 font-size-14">Prédio Comercial à Venda em Localização Estratégica no Campo...</p>
+                                </td>
+                                <td>Avenida Santo Amaro, 3696, <span class="d-block"></span> Brooklin, Paulista, São Paulo, SP 04555-002</td>
+                                <td><span class="badge bg-success">Published</span></td>
+                                <td>
+                                    <a href="/building-edit" class="me-3 text-muted"><i class="mdi mdi-pencil font-size-18"></i></a>
+                                    <a href="javascript:void(0);" class="text-muted"><i class="mdi mdi-close font-size-18"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+<%- contentFor('FooterJs') %>
+    <script src="public/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="public/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="public/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="public/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+    
+    <!-- Ecommerce init js -->
+    <script src="public/assets/js/pages/ecommerce.init.js"></script> 
+
+<%- contentFor('BottomJs') %>
