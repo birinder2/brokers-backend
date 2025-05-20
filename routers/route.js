@@ -1,8 +1,8 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var urlencodeParser = bodyParser.urlencoded({ extended: false });
-var validator = require('express-validator');
-const propertiesController = require('../controllers/properties');
+// var urlencodeParser = bodyParser.urlencoded({ extended: false });
+// var validator = require('express-validator');
+// const propertiesController = require('../controllers/properties');
 
 const authenticateJWT = require("../middleware/authenticateJwt");
 const authorizeRoles = require('../middleware/authorizeRoles ');
