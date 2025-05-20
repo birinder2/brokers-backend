@@ -236,31 +236,26 @@
     let selectedTab = "calendar";
 
     let appointmentData = [];
-    let calendarInstance;
+    let calendarInstance = null;
+    let isProgrammaticNavigation = false;
 
     function renderCalendar() {
         if (calendarInstance) {
-            calendarInstance.remove(); // destroy previous calendar
+            calendarInstance.destroy();
+            calendarInstance = null;
         }
-        // 🔥 Destroy previous calendar if exists
         let calendar = null;
-        if (calendar) {
-            calendar.destroy();
-        }
-        var addEvent=$("#event-modal");
-        var modalTitle = $("#modal-title");
-        var formEvent = $("#form-event");
-        var newEventData = null;
-        var newEventData = null;
         /* initialize the calendar */
-        var date = new Date();
-        var d = date.getDate();
-        var m = date.getMonth();
-        var y = date.getFullYear();
+        const selectedCalMonth = parseInt($('#appointmentMonth').val()); // e.g., 5 for May
+        const selectedCalYear = parseInt($('#appointmentYear').val()); 
+        const initialDate = `${selectedCalYear}-${String(selectedCalMonth).padStart(2, '0')}-01`;
 
         const appointmentEvents = appointmentData.map((item) => ({
-            title: item.salesmanName + " " + item.startTime + " - " + item.endTime,
-            start: moment.utc(item.appointmentDate).local().format("YYYY-MM-DD"),
+            //title: item.salesmanName + " " + item.startTime + " - " + item.endTime,
+            //start: moment.utc(item.appointmentDate).local().format("YYYY-MM-DD"),
+            title: `${item.salesmanName}\n${item.startTime} - ${item.endTime}`,
+            start: moment(`${item.appointmentDate} ${item.startTime}`, "YYYY-MM-DD hh:mm A").format(),
+            end: moment(`${item.appointmentDate} ${item.endTime}`, "YYYY-MM-DD hh:mm A").format(),
             allDay: false,
             className: item.status === "completed" ? "bg-teal" : item.status === "cancelled" ? "bg-danger" : "bg-orange",
             extendedProps: {
@@ -271,54 +266,95 @@
                 status: item.status,
                 startTime: item.startTime,
                 endTime: item.endTime,
+                message: item.message,
+                feedback: item.feedback,
             }
         }));
         var calendarEl = document.getElementById('calendar');
         calendarEl.innerHTML = ""; // Clear previous calendar content
         calendar = new FullCalendar.Calendar(calendarEl, {
-                plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid'],
-                editable: true,
-                droppable: true,
-                selectable: true,
-                defaultView: 'dayGridMonth',
-                themeSystem: 'bootstrap',
-                header: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
-                },
-                events : appointmentEvents,
-                eventClick: function (info) {
-                    console.log("Event clicked:", info);
-                    console.log("Event clicked props:", info.event.extendedProps);
-                    const props = info.event.extendedProps;
-                    const statusClass = props.status === "completed" ? "bg-teal" : props.status === "cancelled" ? "bg-danger" : "bg-orange";
-                    const timing = props.startTime ? `${props.startTime} - ${props.endTime}` : "N/A";
-
-                    const detailsHtml = `
-                        <p><strong>Salesman:</strong> ${props.salesmanName}</p>
-                        <p><strong>Property:</strong> ${props.propertyName}</p>
-                        <p><strong>Date:</strong> ${props.appointmentDate}</p>
-                        <p><strong>Timing:</strong> ${timing}</p>
-                        <p><strong>Status:</strong> ${props.status || 'N/A'}</p>
-                    `;
-
-                    $("#appointment-details-content").html(detailsHtml);
-                    new bootstrap.Modal(document.getElementById("view-appointment-modal")).show();
+            defaultDate: initialDate,
+            plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid'],
+            editable: true,
+            droppable: true,
+            selectable: true,
+            defaultView: 'dayGridMonth',
+            themeSystem: 'bootstrap',
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            },
+            displayEventTime: false,
+            events : appointmentEvents,
+            eventClick: function (info) {
+                console.log("Event clicked:", info);
+                console.log("Event clicked props:", info.event.extendedProps);
+                const props = info.event.extendedProps;
+                let statusClass = props.status === "completed" ? "bg-teal" : props.status === "cancelled" ? "bg-danger" : "bg-orange";
+                const timing = props.startTime ? `${props.startTime} - ${props.endTime}` : "N/A";
+                
+                let actionButtons = "";
+                if (props.status === "cancelled") {
+                    statusClass = "bg-danger";
+                    //actionButtons += `<button class="btn btn-sm btn-blue-grey" data-message=${JSON.stringify(props.message)} onclick="viewCancelledStatus(this.dataset.message)">View Reason</button>`;
+                    actionButtons += `<p><strong>Reason for Cancellation:</strong> ${JSON.stringify(props.message)}</p>`;
                 }
-                            });
-            calendar.render();
 
-            const selectedMonth = parseInt($('#appointmentMonth').val()); // e.g., 5 for May
-            const selectedYear = parseInt($('#appointmentYear').val());   // e.g., 2025
+                const feedback = props.feedback
+                    ? Object.fromEntries(Object.entries(props.feedback))
+                    : {};
 
-            if (selectedMonth && selectedYear){
-                const targetDate = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-01`;
-                calendar.gotoDate(targetDate);
+                if (props.status === "completed" && Object.keys(feedback).length > 0) {
+                    const feedbackData = encodeURIComponent(JSON.stringify(feedback));
+                    /* actionButtons += `
+                    <button class="btn btn-sm btn-blue-grey" 
+                            data-feedback="${feedbackData}" 
+                            onclick="viewBookingFeedback(this)">
+                        View Feedback
+                    </button>`; */
+                }
+                const detailsHtml = `
+                    <p><strong>Salesman:</strong> ${props.salesmanName}</p>
+                    <p><strong>Property:</strong> ${props.propertyName}</p>
+                    <p><strong>Date:</strong> ${props.appointmentDate}</p>
+                    <p><strong>Timing:</strong> ${timing}</p>
+                    <div class="text-left">
+                        <span class="badge font-size-14 text-capitalize ${statusClass}">${props.status}</span>
+                        <div class="w-100"></div>
+                    </div>
+                    ${actionButtons}
+                `;
+
+                $("#appointment-details-content").html(detailsHtml);
+                new bootstrap.Modal(document.getElementById("view-appointment-modal")).show();
+            },
+            datesRender: function (info) {
+                if (isProgrammaticNavigation) {
+                    isProgrammaticNavigation = false; // Reset the flag
+                    return; // Skip fetch
+                }
+                else{
+                    const view = calendar.view;
+                    const newDate = view.currentStart;
+                    selectedMonth = newDate.getMonth() + 1;
+                    selectedYear = newDate.getFullYear();
+                    selectedTab = "calendar";
+                    currentPage = 1;
+
+                    $('#appointmentMonth').val(newDate.getMonth() + 1).trigger('change.select2');
+                    $('#appointmentYear').val(newDate.getFullYear()).trigger('change.select2');
+                    isProgrammaticNavigation = true; // Set the flag to true
+                    updateURLParams();
+                    fetchAppointments(selectedBrokerId);
+                }
             }
-
-
+        });
+        calendar.render();
+        calendarInstance = calendar;
+        
     }
+
 
     function showNotification(type, message) {
         const alertClassMap = {
@@ -383,7 +419,9 @@
             success: function (res) {
                 const tbody = $('#representative-list tbody').empty();
                 appointmentData = res.data;
-                renderCalendar();
+                if(selectedTab === "calendar"){
+                    renderCalendar();
+                }
                 if (res.data.length === 0) {
                     tbody.append('<tr><td colspan="7" class="text-center">No data found</td></tr>');
                 } else {
