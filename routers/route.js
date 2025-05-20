@@ -1,8 +1,9 @@
-var express = require('express');
-var bodyParser = require('body-parser');
+// var express = require('express');
+// var bodyParser = require('body-parser');
 // var urlencodeParser = bodyParser.urlencoded({ extended: false });
 // var validator = require('express-validator');
-// const propertiesController = require('../controllers/properties');
+//const propertiesController = require('../controllers/properties');
+const appointmentController = require('../controllers/appointment');
 
 const authenticateJWT = require("../middleware/authenticateJwt");
 const authorizeRoles = require('../middleware/authorizeRoles ');
@@ -60,8 +61,13 @@ module.exports = function (app) {
             res.render('Profile/my-profile');
       });
 
+      // Bookings - Scheduled Visits - Appointments
+      app.get('/scheduledVisits', isUserAllowed, authenticateJWT, authorizeRoles('salesman'), appointmentController.viewAppointments);
+      app.get('/appointments/data',authenticateJWT,authorizeRoles('salesman'),appointmentController.getAppointments);
+      app.get('/broker/:id',authenticateJWT,authorizeRoles('salesman'),appointmentController.getSalesmen);
 
-      
+      app.get('/scheduledVisitsList', isUserAllowed, authenticateJWT, authorizeRoles('salesman'), appointmentController.viewAppointmentsList);
+
 
       // Layouts
       app.get('/layouts-horizontal', isUserAllowed, function (req, res) {

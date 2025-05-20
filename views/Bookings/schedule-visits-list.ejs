@@ -1,0 +1,798 @@
+<%- contentFor('HeaderCss') %>
+    <link rel="stylesheet" href="public/assets/libs/@fullcalendar/core/main.min.css" type="text/css">
+    <link rel="stylesheet" href="public/assets/libs/@fullcalendar/daygrid/main.min.css" type="text/css">
+    <link rel="stylesheet" href="public/assets/libs/@fullcalendar/bootstrap/main.min.css" type="text/css">
+    <link rel="stylesheet" href="public/assets/libs/@fullcalendar/timegrid/main.min.css" type="text/css">
+    
+    <link href="public/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css">
+    <!-- DataTables -->
+    <link href="public/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
+    <link href="public/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet"
+        type="text/css">
+        
+    <link href="public/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css">
+  
+
+<%- contentFor('breadcrumb') %>
+
+<%- contentFor('body') %>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+
+                    
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h2 class="fs-4 mb-0">Visit Status Summary</h2>
+                            <p class="mb-0">Overview of all broker bookings</p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-end">
+                                <button class="btn btn-primary mt-1 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#bookingFilters" aria-expanded="false" aria-controls="bookingFilters">
+                                    <i class="mdi mdi-filter-variant me-1"></i> Filters
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Apply Filters -->
+                    <div class="fileters-wrapper">
+                        <div class="collapse" id="bookingFilters">
+                            <div class="bg-light py-4 px-3 mt-3">
+                                <h2 class="fs-4 mb-4">Filters</h2>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Months</label>
+                                        <select class="form-select select2" style="width: 100% !important;" id="appointmentMonth" name="appointmentMonth" data-placeholder="Choose a month">
+                                            <option></option> <!-- Placeholder option -->
+                                            <option value="">All Months</option>
+                                            <option value="1">January</option>
+                                            <option value="2">February</option>
+                                            <option value="3">March</option>
+                                            <option value="4">April</option>
+                                            <option value="5">May</option>
+                                            <option value="6">June</option>
+                                            <option value="7">July</option>
+                                            <option value="8">August</option>
+                                            <option value="9">September</option>
+                                            <option value="10">October</option>
+                                            <option value="11">November</option>
+                                            <option value="12">December</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Years</label>
+                                        <select class="form-select select2" style="width: 100% !important;" id="appointmentYear" name="appointmentYear" data-placeholder="Choose a years">
+                                            <option value="">Select</option>
+                                            <option></option> <!-- Placeholder option -->
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Status</label>
+                                        <select class="form-select select2" style="width: 100% !important;" id="appointmentStatus" name="appointmentStatus" data-placeholder="Choose a status">
+                                            <option value="">All Status</option>
+                                            <option value="scheduled">Scheduled</option>
+                                            <option value="completed">Completed</option>
+                                            <option value="cancelled">Cancelled</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <button type="button" id="applyFilterBtn" class="btn btn-success">Apply Filters</button>
+                                    <button type="button" id="resetFilterBtn" class="btn btn-danger">Reset Filters</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nav tabs -->
+                     <div class="py-4">
+                        <div class="bg-light p-2 rounded-2">
+                            <ul class="nav nav-pills mb-0" role="tablist">
+                                <li class="nav-item waves-effect waves-light" id="calendarTab">
+                                    <a class="nav-link active" data-bs-toggle="tab" href="#calendarView" role="tab">
+                                        <span class="d-none d-md-block">Calendar View</span><span class="d-block d-md-none"><i class="mdi mdi-home-variant h5"></i></span>
+                                    </a>
+                                </li>
+                                <li class="nav-item waves-effect waves-light" id="listTab">
+                                    <a class="nav-link" data-bs-toggle="tab" href="#listView" role="tab">
+                                        <span class="d-none d-md-block">Lists View</span><span class="d-block d-md-none"><i class="mdi mdi-account h5"></i></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content p-3 border">
+                        <!-- Calendar view -->
+                        <div class="tab-pane active" id="calendarView" role="tabpanel">
+                            <div id="calendar"></div>
+                        </div>
+
+                        <!-- List view  -->
+                        <div class="tab-pane" id="listView" role="tabpanel">
+                            <div class="">
+                                <div class="row justify-content-between align-items-center pb-3">
+                                    <div class="col-md-3">
+                                        <select id="pageSize" class="form-select" style="width: 100px;">
+                                            <option value="10" selected>10</option>
+                                            <option value="25">25</option>
+                                            <option value="50">50</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+                                    </div>
+                                </div>
+                                <table id="representative-list" class="table table-striped table-centered dt-responsive table-vertical" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>Property Image</th>
+                                            <th>Property Name</th>
+                                            <th>Broker Name</th>
+                                            <th>Booking Date</th>
+                                            <th>Booking Time</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <div class="d-flex justify-content-between align-items-center px-3 pb-3">
+                                    <div id="entriesInfo" class="text-muted small"></div>
+                                    <div id="pagination" class="d-flex"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- View Appointment Modal -->
+<div class="modal fade" id="view-appointment-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Appointment Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="appointment-details-content">
+                <!-- Dynamic content will be injected here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<%- contentFor('FooterJs') %>
+
+    <script src="public/assets/libs/select2/js/select2.min.js"></script>
+
+    <script src="public/assets/js/pages/ecommerce-select2.init.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+
+    <script src="public/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="public/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="public/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="public/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+    
+    <!-- Ecommerce init js -->
+    <script src="public/assets/js/pages/ecommerce.init.js"></script> 
+
+      <!-- Sweet Alerts js -->
+    <script src="public/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+
+    <!-- plugin js -->
+    <script src="public/assets/libs/moment/min/moment.min.js"></script>
+    <!-- <script src="public/assets/libs/jquery-ui/jquery-ui.min.js"></script> -->
+    <script src="public/assets/libs/@fullcalendar/core/main.min.js"></script>
+    <script src="public/assets/libs/@fullcalendar/bootstrap/main.min.js"></script>
+    <script src="public/assets/libs/@fullcalendar/daygrid/main.min.js"></script>
+    <script src="public/assets/libs/@fullcalendar/timegrid/main.min.js"></script>
+    <script src="public/assets/libs/@fullcalendar/interaction/main.min.js"></script>
+
+
+    <!-- Calendar init -->
+    <script>
+        
+    </script>
+
+
+
+<%- contentFor('BottomJs') %>
+
+<script>
+    // Function to generate year list
+    function getYears(startYear) {
+        var currentYear = new Date().getFullYear(), years = [];
+        startYear = startYear || 2018;
+        while (startYear <= currentYear) {
+            years.push(startYear++);
+        }
+        return years;
+    }
+ 
+    // Attach click event after popup is rendered
+    $(document).on('click', '#customCancelBtn', function () {
+        Swal.close(); // Closes the popup
+    });
+    let currentPage = 1;
+    let pageSize = 10;
+    let searchQuery = "";
+    let sortBy = "appointmentDate";
+    let sortOrder = "desc";
+    let setTimeoutVar;
+    let selectedBrokerId = "";
+    let selectedStatus = "";
+    let selectedYear = "";
+    let selectedMonth = "";
+    let selectedTab = "calendar";
+
+    let appointmentData = [];
+    let calendarInstance = null;
+    let isProgrammaticNavigation = false;
+
+    function renderCalendar() {
+        if (calendarInstance) {
+            calendarInstance.destroy();
+            calendarInstance = null;
+        }
+        let calendar = null;
+        /* initialize the calendar */
+        const selectedCalMonth = parseInt($('#appointmentMonth').val()); // e.g., 5 for May
+        const selectedCalYear = parseInt($('#appointmentYear').val()); 
+        const initialDate = `${selectedCalYear}-${String(selectedCalMonth).padStart(2, '0')}-01`;
+
+        const appointmentEvents = appointmentData.map((item) => ({
+            //title: item.salesmanName + " " + item.startTime + " - " + item.endTime,
+            //start: moment.utc(item.appointmentDate).local().format("YYYY-MM-DD"),
+            title: `${item.salesmanName}\n${item.startTime} - ${item.endTime}`,
+            start: moment(`${item.appointmentDate} ${item.startTime}`, "YYYY-MM-DD hh:mm A").format(),
+            end: moment(`${item.appointmentDate} ${item.endTime}`, "YYYY-MM-DD hh:mm A").format(),
+            allDay: false,
+            className: item.status === "completed" ? "bg-teal" : item.status === "cancelled" ? "bg-danger" : "bg-orange",
+            extendedProps: {
+                salesmanName: item.salesmanName,
+                propertyName: item.propertyName,
+                propertyImage: item.propertyImage,
+                appointmentDate: moment.utc(item.appointmentDate).local().format("YYYY-MM-DD"),
+                status: item.status,
+                startTime: item.startTime,
+                endTime: item.endTime,
+                message: item.message,
+                feedback: item.feedback,
+            }
+        }));
+        var calendarEl = document.getElementById('calendar');
+        calendarEl.innerHTML = ""; // Clear previous calendar content
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            defaultDate: initialDate,
+            plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid'],
+            editable: true,
+            droppable: true,
+            selectable: true,
+            defaultView: 'dayGridMonth',
+            themeSystem: 'bootstrap',
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            },
+            displayEventTime: false,
+            events : appointmentEvents,
+            eventClick: function (info) {
+                console.log("Event clicked:", info);
+                console.log("Event clicked props:", info.event.extendedProps);
+                const props = info.event.extendedProps;
+                let statusClass = props.status === "completed" ? "bg-teal" : props.status === "cancelled" ? "bg-danger" : "bg-orange";
+                const timing = props.startTime ? `${props.startTime} - ${props.endTime}` : "N/A";
+                
+                let actionButtons = "";
+                if (props.status === "cancelled") {
+                    statusClass = "bg-danger";
+                    //actionButtons += `<button class="btn btn-sm btn-blue-grey" data-message=${JSON.stringify(props.message)} onclick="viewCancelledStatus(this.dataset.message)">View Reason</button>`;
+                    actionButtons += `<p><strong>Reason for Cancellation:</strong> ${JSON.stringify(props.message)}</p>`;
+                }
+
+                const feedback = props.feedback
+                    ? Object.fromEntries(Object.entries(props.feedback))
+                    : {};
+
+                if (props.status === "completed" && Object.keys(feedback).length > 0) {
+                    const feedbackData = encodeURIComponent(JSON.stringify(feedback));
+                    /* actionButtons += `
+                    <button class="btn btn-sm btn-blue-grey" 
+                            data-feedback="${feedbackData}" 
+                            onclick="viewBookingFeedback(this)">
+                        View Feedback
+                    </button>`; */
+                }
+                const detailsHtml = `
+                    <p><strong>Salesman:</strong> ${props.salesmanName}</p>
+                    <p><strong>Property:</strong> ${props.propertyName}</p>
+                    <p><strong>Date:</strong> ${props.appointmentDate}</p>
+                    <p><strong>Timing:</strong> ${timing}</p>
+                    <div class="text-left">
+                        <span class="badge font-size-14 text-capitalize ${statusClass}">${props.status}</span>
+                        <div class="w-100"></div>
+                    </div>
+                    ${actionButtons}
+                `;
+
+                $("#appointment-details-content").html(detailsHtml);
+                new bootstrap.Modal(document.getElementById("view-appointment-modal")).show();
+            },
+            datesRender: function (info) {
+                if (isProgrammaticNavigation) {
+                    isProgrammaticNavigation = false; // Reset the flag
+                    return; // Skip fetch
+                }
+                else{
+                    const view = calendar.view;
+                    const newDate = view.currentStart;
+                    selectedMonth = newDate.getMonth() + 1;
+                    selectedYear = newDate.getFullYear();
+                    selectedTab = "calendar";
+                    currentPage = 1;
+
+                    $('#appointmentMonth').val(newDate.getMonth() + 1).trigger('change.select2');
+                    $('#appointmentYear').val(newDate.getFullYear()).trigger('change.select2');
+                    isProgrammaticNavigation = true; // Set the flag to true
+                    updateURLParams();
+                    fetchAppointments(selectedBrokerId);
+                }
+            }
+        });
+        calendar.render();
+        calendarInstance = calendar;
+        
+    }
+
+
+    function showNotification(type, message) {
+        const alertClassMap = {
+            success: "alert-success",
+            info: "alert-info",
+            warning: "alert-warning",
+            danger: "alert-danger"
+        };
+        const iconMap = {
+            success: "fa-check-circle",
+            info: "fa-info-circle",
+            warning: "fa-exclamation-triangle",
+            danger: "fa-times-circle"
+        };
+        const cssClass = alertClassMap[type] || "alert-primary";
+        const icon = iconMap[type] || "fa-thumbs-up";
+    
+        clearTimeout(setTimeoutVar);
+        $(".alert").removeClass("alert-success alert-info alert-warning alert-danger alert-primary").fadeIn();
+        $(".alert").addClass(cssClass);
+        $(".notificationIcon").addClass(icon);
+        $(".notificationText").html(message);
+    
+        setTimeoutVar = setTimeout(() => {
+            $(".alert").fadeOut();
+            $(".alert").removeClass(cssClass);
+            $(".notificationIcon").removeClass(icon);
+        }, 5000);
+    }
+    
+    $("#broker-select").on("change",function(){
+        const selectedValue = $(this).val();
+        selectedBrokerId = selectedValue;
+        currentPage = 1;
+        searchQuery = "";
+        $('#searchInput').val("");
+        console.log("Selected broker:", selectedValue);
+        
+        /* updateURLParams();
+        if(selectedValue){
+            fetchAppointments(selectedValue);
+        }
+        else{
+            fetchAppointments();
+        } */
+    })
+
+    function fetchAppointments(brokerId="") {
+        $('#status').fadeIn();
+        $('#preloader').fadeIn('slow');
+        //jQuery(".loader").fadeIn('slow');
+        const brokerIdParam = brokerId ? `&brokerId=${brokerId}` : '';
+        const statusParam = selectedStatus ? `&status=${selectedStatus}` : '';
+        const yearParam = selectedYear ? `&year=${selectedYear}` : '';
+        const monthParam = selectedMonth ? `&month=${selectedMonth}` : '';
+        const viewParam = selectedTab ? `&view=${selectedTab}` : '';
+        let url = `/appointments/data?page=${currentPage}&limit=${pageSize}&search=${encodeURIComponent(searchQuery)}&sortBy=${sortBy}&sortOrder=${sortOrder}${brokerIdParam}${statusParam}${yearParam}${monthParam}${viewParam}`;
+        $.ajax({
+            url: url,
+            method: "GET",
+            xhrFields: { withCredentials: true },
+            success: function (res) {
+                const tbody = $('#representative-list tbody').empty();
+                appointmentData = res.data;
+                if(selectedTab === "calendar"){
+                    renderCalendar();
+                }
+                if (res.data.length === 0) {
+                    tbody.append('<tr><td colspan="7" class="text-center">No data found</td></tr>');
+                } else {
+                    res.data.forEach((item) => {
+                        let statusClass = "bg-orange";
+                        let actionButtons = "";
+                        console.log("Response from server", item);
+                        if (item.status === "completed") {
+                            statusClass = "bg-teal";
+                        }
+                        if (item.status === "cancelled") {
+                            statusClass = "bg-danger";
+                            actionButtons += `<button class="btn btn-sm btn-blue-grey" data-message=${JSON.stringify(item.message)} onclick="viewCancelledStatus(this.dataset.message)">View Reason</button>`;
+                        }
+
+                        const feedback = item.feedback
+                            ? Object.fromEntries(Object.entries(item.feedback))
+                            : {};
+
+                        if (item.status === "completed" && Object.keys(feedback).length > 0) {
+                            const feedbackData = encodeURIComponent(JSON.stringify(feedback));
+                            actionButtons += `
+                            <button class="btn btn-sm btn-blue-grey" 
+                                    data-feedback="${feedbackData}" 
+                                    onclick="viewBookingFeedback(this)">
+                                View Feedback
+                            </button>`;
+                        }
+
+                        const row = `
+                        <tr>
+                            <td class="product-list-img">
+                                <img src="${item.propertyImage}" class="img-fluid avatar-md rounded" alt="tbl">
+                            </td>
+                            <td>${item.propertyName}</td>
+                            <td>${item.salesmanName}</td>
+                            <td>${moment
+                            .utc(item.appointmentDate)
+                            .local()
+                            .format("YYYY-MM-DD")}</td>
+                            <td>${item.startTime} - ${item.endTime}</td>
+                            <td>
+                                <div class="text-left">
+                                    <span class="badge font-size-14 text-capitalize ${statusClass}">${item.status}</span>
+                                    <div class="w-100"></div>
+                                </div>
+                            </td>
+                            <td>
+                            <div class="mt-2">${actionButtons}</div>
+                            </td>
+                        </tr>`;
+                        tbody.append(row);
+                        });
+                }
+                if(res.data.length > 0){
+                    renderPagination(res.totalPages, res.currentPage);
+                    togglePagination(res.totalRecords);
+        
+                    const start = (res.currentPage - 1) * pageSize + 1;
+                    const end = Math.min(start + res.data.length - 1, res.totalRecords);
+                    $('#entriesInfo').text(`Showing ${start} to ${end} of ${res.totalRecords} entries`);
+                }
+                else{
+                    renderPagination(0, 1);
+                    togglePagination(0);
+        
+                    const start = (1 - 1) * pageSize + 1;
+                    const end = Math.min(start + 0 - 1, 0);
+                    $('#entriesInfo').text(``);
+                }
+                $('#status').fadeOut();
+                $('#preloader').fadeOut('slow');
+            },
+            error: function (xhr) {
+                if (xhr.status === 401) {
+                    showNotification("danger", "Token is expired or missing");
+                    window.location.href = "/";
+                } else {
+                    showNotification("danger", "Failed to load properties.");
+                }
+                $('#status').fadeOut();
+                $('#preloader').fadeOut('slow');
+            }
+        });
+    }
+    
+    function renderPagination(totalPages, current) {
+        let html = '';
+
+        if (totalPages <= 1) {
+            // No pagination needed
+            $('#pagination').html('');
+            return;
+        }
+
+        if (current > 1) {
+            html += `<button class="btn btn-sm btn-outline-primary mx-1" data-page="${current - 1}">Prev</button>`;
+        }
+
+        if (totalPages <= 7) {
+            // Show all pages if total is small
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<button class="btn btn-sm ${i === current ? 'btn-primary' : 'btn-outline-primary'} mx-1" data-page="${i}">${i}</button>`;
+            }
+        } else {
+            // Large pagination with ellipses
+            html += `<button class="btn btn-sm ${current === 1 ? 'btn-primary' : 'btn-outline-primary'} mx-1" data-page="1">1</button>`;
+
+            if (current > 4) {
+                html += `<span class="mx-1">...</span>`;
+            }
+
+            let start = Math.max(2, current - 1);
+            let end = Math.min(totalPages - 1, current + 1);
+
+            for (let i = start; i <= end; i++) {
+                html += `<button class="btn btn-sm ${i === current ? 'btn-primary' : 'btn-outline-primary'} mx-1" data-page="${i}">${i}</button>`;
+            }
+
+            if (current < totalPages - 3) {
+                html += `<span class="mx-1">...</span>`;
+            }
+
+            html += `<button class="btn btn-sm ${current === totalPages ? 'btn-primary' : 'btn-outline-primary'} mx-1" data-page="${totalPages}">${totalPages}</button>`;
+        }
+
+        if (current < totalPages) {
+            html += `<button class="btn btn-sm btn-outline-primary mx-1" data-page="${current + 1}">Next</button>`;
+        }
+
+        $('#pagination').html(html);
+    }
+
+    function togglePagination(total) {
+        $('#pagination').toggle(total > pageSize);
+    }
+    
+    function getStateFromURL() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+            page: parseInt(params.get('page')) || 1,
+            limit: parseInt(params.get('limit')) || 10,
+            search: params.get('search') || '',
+            brokerId: params.get('brokerId') || '',
+            selectedStatus: params.get('status') || '',
+            selectedMonth: params.get('month') || '',
+            selectedYear: params.get('year') || '',
+            selectedTab: params.get('view') || 'calendar'
+        };
+    }
+
+    function updateURLParams() {
+        const params = new URLSearchParams();
+        params.set('page', currentPage);
+        params.set('limit', pageSize);
+        if (searchQuery) params.set('search', searchQuery);
+        if (selectedBrokerId) params.set('brokerId', selectedBrokerId);
+        if (selectedStatus) params.set('status', selectedStatus);
+        if (selectedYear) params.set('year', selectedYear);
+        if (selectedMonth) params.set('month', selectedMonth);
+        if (selectedTab) params.set('view', selectedTab);
+
+        const newUrl = `${window.location.pathname}?${params.toString()}`;
+        window.history.replaceState({}, '', newUrl);
+    }
+
+    $(document).ready(function () {
+        var currentYear = new Date().getFullYear();
+        var currentMonth = new Date().getMonth() + 1; 
+        var years = getYears(2018);
+        var $dropdown = $('#appointmentYear');
+        
+        $.each(years, function(index, year) {
+            $dropdown.append($('<option></option>').val(year).text(year));
+        });
+
+        // Set current selections
+        //$('#appointmentMonth').val(currentMonth).trigger('change.select2');
+        //$('#appointmentYear').val(currentYear).trigger('change.select2');
+
+        const state = getStateFromURL();
+        currentPage = state.page;
+        pageSize = state.limit;
+        searchQuery = state.search;
+        selectedBrokerId = state.brokerId;
+        selectedStatus = state.selectedStatus;
+        selectedYear = state.selectedYear || currentYear;
+        selectedMonth = state.selectedMonth || currentMonth;
+        selectedTab = state.selectedTab || "calendar";
+
+        // Pre-populate inputs
+        $('#pageSize').val(pageSize);
+        $('#searchInput').val(searchQuery);
+        $('#broker-select').val(selectedBrokerId).trigger('change.select2');
+        $('#appointmentStatus').val(selectedStatus).trigger('change.select2');
+        $('#appointmentYear').val(selectedYear).trigger('change.select2');
+        $('#appointmentMonth').val(selectedMonth).trigger('change.select2');
+         
+        const calendarTabTriggerEl = document.querySelector('#'+selectedTab+'Tab a');
+        const tab = new bootstrap.Tab(calendarTabTriggerEl);
+        tab.show();
+
+        fetchAppointments(selectedBrokerId);
+
+        $(document).on('click', '#calendarTab', function () {
+            selectedTab = "calendar";
+            currentPage = 1;
+            updateURLParams();
+            fetchAppointments(selectedBrokerId);
+        });
+        $(document).on('click', '#listTab', function () { 
+            selectedTab = "list";
+            currentPage = 1;
+            updateURLParams();
+            fetchAppointments(selectedBrokerId);
+        });
+
+        $(document).on('click', '#resetFilterBtn', function () { 
+            $('#appointmentStatus').val("").trigger('change.select2');
+            $('#broker-select').val("").trigger('change.select2');
+            var currentYear = new Date().getFullYear();
+            var currentMonth = new Date().getMonth() + 1; 
+            $('#appointmentYear').val(currentYear).trigger('change.select2');
+            $('#appointmentMonth').val(currentMonth).trigger('change.select2');
+            updateURLParams();
+        });
+        
+        $(document).on('click', '#applyFilterBtn', function () {
+            selectedStatus = $("#appointmentStatus").val();
+            selectedYear = $("#appointmentYear").val();
+            selectedMonth = $("#appointmentMonth").val();
+            selectedBrokerId = $("#broker-select").val();
+            currentPage = 1;
+            updateURLParams();
+            fetchAppointments(selectedBrokerId);
+
+             document.getElementById('applyFilterBtn').addEventListener('click', function () {
+                const filterSection = document.getElementById('bookingFilters');
+                const collapseInstance = bootstrap.Collapse.getInstance(filterSection) || new bootstrap.Collapse(filterSection, { toggle: false });
+                collapseInstance.hide();
+            });
+        });
+        // Pagination click
+        $('#pagination').on('click', 'button', function () {
+            currentPage = parseInt($(this).data('page'));
+            updateURLParams();
+            fetchAppointments(selectedBrokerId);
+        });
+    
+        // Page size
+        $('#pageSize').on('change', function () {
+            pageSize = parseInt($(this).val());
+            currentPage = 1;
+            updateURLParams();
+            fetchAppointments(selectedBrokerId);
+        });
+    
+        // Search
+        $('#searchInput').on('input', function () {
+            searchQuery = $(this).val();
+            currentPage = 1;
+            updateURLParams();
+            fetchAppointments(selectedBrokerId);
+        });
+    
+        // Optional: column sort (add class 'sortable' and data-sort="field")
+        $('.sort').on('click', function () {
+            const field = $(this).data('sort');
+            if (sortBy === field) {
+                sortOrder = sortOrder === "asc" ? "desc" : "asc";
+            } else {
+                sortBy = field;
+                sortOrder = "asc";
+            }
+            currentPage = 1;
+            updateURLParams();
+            fetchAppointments(selectedBrokerId);
+        });
+    });
+    //Custom width padding
+    function viewCancelledStatus(reason) {
+        //const reason = $('#viewCancelledStatus').data("message") || "No reason provided.";
+        Swal.fire({
+            title: '',
+            html: `
+                <div class="swal-body-content text-start">
+                    <h4 class="mb-3 border-bottom pb-3 mb-4">Reason for Cancellation</h4>
+                    <p class="text-capitalize">${reason}</p>
+                    <div class="text-start mt-5">
+                        <button id="customCancelBtn" class="btn btn-primary px-4">Ok</button>
+                    </div>
+                </div>
+            `, // 'I will close in <strong></strong> seconds.',
+            width: 600,
+            confirmButtonColor: "#67a8e4",
+            showConfirmButton: false,
+            didOpen: () => {
+                const style = document.createElement('style');
+                style.textContent = `
+                .swal-body-content {
+                    padding-top: 20px;
+                    padding-bottom: 20px;
+                }
+                `;
+                document.head.appendChild(style);
+            }
+        })
+    };
+
+    function viewBookingFeedback(buttonElement) {
+        const feedbackEncoded = buttonElement.dataset.feedback;
+        const feedback = JSON.parse(decodeURIComponent(feedbackEncoded));
+
+        let html = `<div class="swal-body-content text-start">
+                    <h4 class="mb-3 border-bottom pb-3 mb-4">Booking Feedback</h4>
+                     <div class="row">`;
+
+        Object.entries(feedback).forEach(([question, rating]) => {
+            html += `
+                <div class="col-auto py-2 fw-semibold">${question}</div>
+                <div class="col py-2 text-end">${renderStars(rating)}</div>`;
+        });
+
+        html += `<div class="text-start mt-4">
+                        <button id="customCancelBtn" class="btn btn-primary px-4">Ok</button>
+                    </div>
+                </div>`;
+
+        let html2 = `<div class="swal-body-content text-start">
+                    <h4 class="mb-3 border-bottom pb-3 mb-4">Booking Feedback</h4>
+                     <div class="row">
+                        <div class="col-auto py-2 fw-semibold">Como foi sua experiência com o corretor?</div>
+                        <div class="col py-2 text-end">2</div>
+                        <div class="col-auto py-2 fw-semibold">O que você achou da localização?</div>
+                        <div class="col py-2 text-end">4</div>
+                        <div class="col-auto py-2 fw-semibold">Como foi sua experiência?</div>
+                        <div class="col py-2 text-end">3</div>
+                    </div>
+                    <div class="text-start mt-4">
+                        <button id="customCancelBtn" class="btn btn-primary px-4">Ok</button>
+                    </div>
+                </div>`;
+
+        Swal.fire({
+            title: '',
+            html: html,
+            width: 600,
+            confirmButtonColor: "#67a8e4",
+            showConfirmButton: false,
+            didOpen: () => {
+                const style = document.createElement('style');
+                style.textContent = `
+                .swal-body-content {
+                    padding-top: 20px;
+                    padding-bottom: 20px;
+                }
+                `;
+                document.head.appendChild(style);
+            }
+        });
+    }
+    
+    function renderStars(rating) {
+        let stars = "";
+        for (let i = 1; i <= 5; i++) {
+        stars += `<i class="fas fa-star${
+            i <= rating ? " text-warning" : " text-muted"
+        }"></i>`;
+        }
+        return stars;
+    }
+    
+    </script>
+    

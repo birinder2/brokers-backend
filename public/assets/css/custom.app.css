@@ -14,3 +14,28 @@
     width: calc(100% - 70px);
     left: 70px;
 }
+
+
+/* Visites calender styles */
+#calendar .btn.btn-primary {
+    background-color: #90a4ae;
+    border-color: #90a4ae;
+}
+
+#calendar .btn.btn-primary:hover, #calendar .btn.btn-primary.active, #calendar .btn.btn-primary.active:hover {
+    color: #fff;
+    background-color: #8799a2;
+    border-color: #8799a2;
+}
+
+
+
+#calendar .btn-check:focus+.btn-primary, .btn-primary:focus , .btn-check:focus+.btn, .btn:focus {
+    box-shadow: none !important;
+}
+
+
+
+/* .fileters-wrapper .bookingFilters {
+    padding-bottom: 1.5rem;
+} */
