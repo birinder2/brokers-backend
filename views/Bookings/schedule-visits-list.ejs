@@ -335,18 +335,23 @@
                     return; // Skip fetch
                 }
                 else{
-                    const view = calendar.view;
-                    const newDate = view.currentStart;
-                    selectedMonth = newDate.getMonth() + 1;
-                    selectedYear = newDate.getFullYear();
-                    selectedTab = "calendar";
-                    currentPage = 1;
+                    if(info.view?.type === 'dayGridMonth'){
+                        const view = calendar.view;
+                        const newDate = view.currentStart;
+                        selectedMonth = newDate.getMonth() + 1;
+                        selectedYear = newDate.getFullYear();
+                        selectedTab = "calendar";
+                        currentPage = 1;
 
-                    $('#appointmentMonth').val(newDate.getMonth() + 1).trigger('change.select2');
-                    $('#appointmentYear').val(newDate.getFullYear()).trigger('change.select2');
-                    isProgrammaticNavigation = true; // Set the flag to true
-                    updateURLParams();
-                    fetchAppointments(selectedBrokerId);
+                        $('#appointmentMonth').val(newDate.getMonth() + 1).trigger('change.select2');
+                        $('#appointmentYear').val(newDate.getFullYear()).trigger('change.select2');
+                        
+                        // type:  "dayGridMonth"
+                        // type:  "timeGridWeek"
+                        isProgrammaticNavigation = true; // Set the flag to true
+                        updateURLParams();
+                        fetchAppointments(selectedBrokerId);
+                    }
                 }
             }
         });
