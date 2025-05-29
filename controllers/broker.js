@@ -487,12 +487,12 @@ exports.updateBroker = async (req, res) => {
     }
 
     try {
-      const { salesId, name, phone, phoneCode, slot_duration, status } = req.body;
+      const { salesId, name, phone, phoneCode, slot_duration } = req.body;
 
       if (!salesId)
         return res.status(400).json({ success: false, message: "Missing broker ID." });
 
-      const updateData = { name, phone, phoneCode, slot_duration, status };
+      const updateData = { name, phone, phoneCode, slot_duration };
 
       const existingPhone = await Salesman.findOne({ phone, _id: { $ne: salesId } });
       if (existingPhone) {

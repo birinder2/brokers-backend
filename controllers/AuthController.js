@@ -125,6 +125,13 @@ module.exports = function (app) {
 				return res.json({ status: 'error', message: 'Invalid credentials' })
 	
 			}
+
+			if (brokerUser.status === 'inactive' || brokerUser.isActive === false) {
+				return res.json({
+					status: 'error',
+					message: 'Your account is currently inactive. Please contact support to reactivate your account.',
+				});
+			}
 	
 			// Set session
 			req.session.broker_id = user._id;

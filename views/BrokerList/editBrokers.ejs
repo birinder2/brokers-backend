@@ -76,7 +76,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label" for="status">Status<span class="text-danger">*</span></label>
                                     <select class="select2 form-select select2-multiple" id="statusBroker" name="statusBroker" data-placeholder="Choose ...">
@@ -84,7 +84,7 @@
                                         <option value="inactive" <%= salesman.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
                         </div> 
                     </div>
                 </div>
@@ -525,7 +525,7 @@
             // formData.append('slot_duration', $('#slot_duration').val());
             // formData.append('image', $('#image')[0].files[0]);
             formData.append('salesId', $('#salesId').val());
-            formData.append('status', $('#statusBroker').val());
+            //formData.append('status', $('#statusBroker').val());
             $('#status').fadeIn();
             $('#preloader').fadeIn('slow');
             $.ajax({
@@ -543,7 +543,7 @@
                         //showNotification("success", response.message);
                         Swal.fire("", response.message || 'Your profile has been updated successFully', "success");
 
-                        window.location.href = '/editBroker';
+                        window.location.href = '/myProfile';
                         // setTimeout(() => {
                         // const params = new URLSearchParams(window.location.search);
                         // params.delete('brokerId'); // Remove brokerId

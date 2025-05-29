@@ -66,38 +66,38 @@ module.exports = function (app) {
 
       // Bookings - Scheduled Visits - Appointments
       app.get('/scheduledVisits', isUserAllowed, authenticateJWT, authorizeRoles('salesman'), appointmentController.viewAppointments);
-      app.get('/appointments/data',authenticateJWT,authorizeRoles('salesman'),appointmentController.getAppointments);
-      app.get('/broker/:id',authenticateJWT,authorizeRoles('salesman'),appointmentController.getSalesmen);
+      app.get('/appointments/data',isUserAllowed,authenticateJWT,authorizeRoles('salesman'),appointmentController.getAppointments);
+      app.get('/broker/:id',isUserAllowed,authenticateJWT,authorizeRoles('salesman'),appointmentController.getSalesmen);
 
-      app.get('/scheduledVisitsList', isUserAllowed, authenticateJWT, authorizeRoles('salesman'), appointmentController.viewAppointmentsList);
+      app.get('/scheduledVisitsList',isUserAllowed, isUserAllowed, authenticateJWT, authorizeRoles('salesman'), appointmentController.viewAppointmentsList);
 
       
       // Schedules
-      app.post('/schedule',authenticateJWT, authorizeRoles('salesman'),scheduleController.addSchedule);
-      app.get('/schedule',authenticateJWT, authorizeRoles('salesman'),scheduleController.getSchedules);
-      app.post('/schedule/delete',authenticateJWT, authorizeRoles('salesman'),scheduleController.deleteSchedules);
-      app.get('/available-salesmen',authenticateJWT, authorizeRoles('salesman'),scheduleController.getAvailableSalesmen);
+      app.post('/schedule',isUserAllowed,authenticateJWT, authorizeRoles('salesman'),scheduleController.addSchedule);
+      app.get('/schedule',isUserAllowed,authenticateJWT, authorizeRoles('salesman'),scheduleController.getSchedules);
+      app.post('/schedule/delete',isUserAllowed,authenticateJWT, authorizeRoles('salesman'),scheduleController.deleteSchedules);
+      app.get('/available-salesmen',isUserAllowed,authenticateJWT, authorizeRoles('salesman'),scheduleController.getAvailableSalesmen);
       
       // Brokers
-      app.get('/brokersList', authenticateJWT, authorizeRoles('salesman'), brokerController.broker);
+      app.get('/brokersList',isUserAllowed, authenticateJWT, authorizeRoles('salesman'), brokerController.broker);
 
-      app.get('/brokers/data', authenticateJWT, authorizeRoles('salesman'), brokerController.getBrokerList);
+      app.get('/brokers/data',isUserAllowed, authenticateJWT, authorizeRoles('salesman'), brokerController.getBrokerList);
 
-      app.get('/addBroker', authenticateJWT, authorizeRoles('salesman'),
+      app.get('/addBroker',isUserAllowed, authenticateJWT, authorizeRoles('salesman'),
       function (req, res) {
             res.locals = { title: 'Add New Broker' };
             res.render('BrokerList/addBrokers');
       });
 
-      app.get('/myProfile', authenticateJWT, authorizeRoles('salesman'), brokerController.editBroker);
+      app.get('/myProfile',isUserAllowed, authenticateJWT, authorizeRoles('salesman'), brokerController.editBroker);
 
-      app.post('/saveBroker', authenticateJWT, authorizeRoles('salesman'), brokerController.saveBroker);
+      app.post('/saveBroker',isUserAllowed, authenticateJWT, authorizeRoles('salesman'), brokerController.saveBroker);
 
-      app.patch('/updateBroker', authenticateJWT, authorizeRoles('salesman'), brokerController.updateBroker);
+      app.patch('/updateBroker',isUserAllowed, authenticateJWT, authorizeRoles('salesman'), brokerController.updateBroker);
 
-      app.delete('/deleteBroker/:id', authenticateJWT, authorizeRoles('salesman'), brokerController.deleteBroker);
+      app.delete('/deleteBroker/:id',isUserAllowed, authenticateJWT, authorizeRoles('salesman'), brokerController.deleteBroker);
 
-      app.post('/updatePassword',authenticateJWT,authorizeRoles('salesman'),brokerController.updatePassword);
+      app.post('/updatePassword',isUserAllowed,authenticateJWT,authorizeRoles('salesman'),brokerController.updatePassword);
 
 
       // Layouts
