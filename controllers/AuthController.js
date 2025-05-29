@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 const BackendUserLogin = require("../models/BackendUserLogin");
+const salesman = require("../models/Salesman");	
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 var urlencodeParser = bodyParser.urlencoded({ extended: false });
@@ -106,9 +107,15 @@ module.exports = function (app) {
 		try {
 			//Check if user exists
 			const user = await BackendUserLogin.findOne({ email, role: 'salesman' });
+			const brokerUser = await salesman.findOne({ email});
+
 			console.log("user",user);
 	
 			if (!user) {
+				return res.json({ status: 'error', message: 'Invalid credentials' })
+			}
+
+			if (!brokerUser) {
 				return res.json({ status: 'error', message: 'Invalid credentials' })
 			}
 	
@@ -122,7 +129,7 @@ module.exports = function (app) {
 			// Set session
 			req.session.broker_id = user._id;
 			const token = jwt.sign(
-				{ brokerId: user._id },
+				{ backendId: user._id, brokerId: brokerUser._id, email: user.email, role: user.role },
 					process.env.TOKEN_KEY,
 				{
 				  expiresIn: process.env.TOKEN_EXPIRY || '1h',

@@ -138,5 +138,9 @@
   "Pages" : "Pages",
 
 
-  "Developers_Booking_lists": "Scheduled Visits"
+  "Developers_Booking_lists": "Scheduled Visits",
+  
+  "Brokers": "Brokers",
+  "Brokers_List": "Brokers",
+  "Add_New_Brokers": "Add New Brokers"
 }

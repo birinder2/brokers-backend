@@ -3,6 +3,8 @@ const Salesman = require("../models/Salesman");
 const Property = require("../models/Properties");
 const mongoose = require("mongoose");
 const moment = require("moment");
+const { Types } = require('mongoose');
+
 
 exports.viewAppointments = async (req, res) => {
   const brokers = await Salesman.find({}, "name");
@@ -34,15 +36,17 @@ exports.getAppointments = async (req, res) => {
       month,
       year,
       status,
-      brokerId,
+      
       view = "list",
     } = req.query;
 
     console.log("Query Params:", req.query); // Debugging line
 
     let sess = req.session;
-    brokerId = (sess.broker_id)? sess.broker_id : '';
+    //brokerId = (sess.broker_id)? sess.broker_id : '';
+        const  brokerId  = req.user.salesmanId;
 
+    console.log("Broker ID from session:", req.user);
     const skip = (page - 1) * limit;
     const sortOptions = {};
     if (sortBy) sortOptions[sortBy] = sortOrder === "desc" ? -1 : 1;
@@ -69,8 +73,8 @@ exports.getAppointments = async (req, res) => {
     }
 
     
-    console.log("Final filter sent to Mongo:", filter);
-    console.log("Final sort sent to Mongo:", sortOptions);
+    //console.log("Final filter sent to Mongo:", filter);
+    //console.log("Final sort sent to Mongo:", sortOptions);
 
     const appointments = await Appointment.find(filter)
       .populate({
@@ -85,6 +89,8 @@ exports.getAppointments = async (req, res) => {
 
     let filteredAppointments = appointments;
 
+    // console.log("Total appointments fetched:", appointments);
+
     if (search.trim() !== "" && view === "list") {
       const searchLower = search.toLowerCase();
       filteredAppointments = appointments.filter((app) => {
@@ -95,10 +101,14 @@ exports.getAppointments = async (req, res) => {
     }
     if (brokerId) {
       //console.log("Salesman ID:", brokerId);
+      const someSalesId = new Types.ObjectId(brokerId);
       filteredAppointments = filteredAppointments.filter((app) => {
-        return app.salesId && app.salesId._id.toString() === brokerId;
+        return app.salesId && app.salesId._id.toString() === brokerId.toString();
+        //return app.salesId && app.salesId._id.toString() === "6800c4eb0480ef79cc39dde4";
+        //return app.salesId && app.salesId._id && app.salesId._id.equals(someSalesId)
       });
     }
+    // console.log("Filtered appointments after search:", filteredAppointments);
 
     const totalRecords = filteredAppointments.length;
     let paginatedAppointments;
@@ -111,6 +121,7 @@ exports.getAppointments = async (req, res) => {
         skip + parseInt(limit)
       );
     }
+
 
     const formattedData = paginatedAppointments.map((app) => ({
       _id: app._id,
@@ -125,7 +136,7 @@ exports.getAppointments = async (req, res) => {
       feedback: app.feedback || {},
     }));
 
-    res.json({
+    res.status(200).json({
       data: formattedData,
       totalRecords,
       totalPages: Math.ceil(totalRecords / limit),

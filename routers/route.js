@@ -7,6 +7,9 @@ const appointmentController = require('../controllers/appointment');
 
 const authenticateJWT = require("../middleware/authenticateJwt");
 const authorizeRoles = require('../middleware/authorizeRoles ');
+const scheduleController = require('../controllers/schdule');
+const brokerController = require('../controllers/broker');
+
 
 module.exports = function (app) {
 
@@ -67,6 +70,34 @@ module.exports = function (app) {
       app.get('/broker/:id',authenticateJWT,authorizeRoles('salesman'),appointmentController.getSalesmen);
 
       app.get('/scheduledVisitsList', isUserAllowed, authenticateJWT, authorizeRoles('salesman'), appointmentController.viewAppointmentsList);
+
+      
+      // Schedules
+      app.post('/schedule',authenticateJWT, authorizeRoles('salesman'),scheduleController.addSchedule);
+      app.get('/schedule',authenticateJWT, authorizeRoles('salesman'),scheduleController.getSchedules);
+      app.post('/schedule/delete',authenticateJWT, authorizeRoles('salesman'),scheduleController.deleteSchedules);
+      app.get('/available-salesmen',authenticateJWT, authorizeRoles('salesman'),scheduleController.getAvailableSalesmen);
+      
+      // Brokers
+      app.get('/brokersList', authenticateJWT, authorizeRoles('salesman'), brokerController.broker);
+
+      app.get('/brokers/data', authenticateJWT, authorizeRoles('salesman'), brokerController.getBrokerList);
+
+      app.get('/addBroker', authenticateJWT, authorizeRoles('salesman'),
+      function (req, res) {
+            res.locals = { title: 'Add New Broker' };
+            res.render('BrokerList/addBrokers');
+      });
+
+      app.get('/myProfile', authenticateJWT, authorizeRoles('salesman'), brokerController.editBroker);
+
+      app.post('/saveBroker', authenticateJWT, authorizeRoles('salesman'), brokerController.saveBroker);
+
+      app.patch('/updateBroker', authenticateJWT, authorizeRoles('salesman'), brokerController.updateBroker);
+
+      app.delete('/deleteBroker/:id', authenticateJWT, authorizeRoles('salesman'), brokerController.deleteBroker);
+
+      app.post('/updatePassword',authenticateJWT,authorizeRoles('salesman'),brokerController.updatePassword);
 
 
       // Layouts

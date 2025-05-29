@@ -1,0 +1,584 @@
+<%- contentFor('HeaderCss') %>
+    <!-- Sweet Alert-->
+    <link href="public/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css">
+    <link href="public/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css">
+    <link href="public/assets/libs/spectrum-colorpicker2/spectrum.min.css" rel="stylesheet" type="text/css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.8/css/intlTelInput.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+
+<%- contentFor('breadcrumb') %>
+
+<%- contentFor('body') %>
+
+    <div class="pt-5">
+        <form id="addBroker" class="pb-5">
+            <div class="sticky-save-container text-end">
+                <button type="button" class="btn btn-blue-grey waves-effect waves-light me-1" id="backBtn">Back</button>
+                <button type="submit" class="btn btn-success waves-effect waves-light">Save Changes</button>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Broker Information</h4>
+                    <p class="card-title-desc">Fill information below (<strong>*</strong>) are required fields.</p>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="image">Broker Profile Image</label>
+                                        <div class="view-image bg-light d-flex align-items-center justify-content-center" style="width: 150px; height: 150px;">
+                                            <img id="logoPreview" src="public/assets/images/laik/no-image.webp" alt="Logo Preview" class="img-fluid" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                                        </div>
+                                        <input type="file" name="image" id="image" class="form-control d-none" onchange="previewLogo(event)">
+                                        <label role="button" for="image" class="btn btn-blue-grey mt-3 waves-effect waves-light">Upload Logo</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="name">Broker Name<span class="text-danger">*</span></label>
+                                        <input id="name" name="name" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="email">Broker Email<span class="text-danger">*</span></label>
+                                        <input id="email" name="email" type="text" class="form-control" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="password">Password<span class="text-danger">*</span></label>
+                                        <input id="password" name="password" type="password" class="form-control" autocomplete="new-password">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="role" class="form-label">Phone Number<span class="text-danger">*</span></label>
+                                        <div class="input-group mb-3">
+                                            <select class="input-group-text" id="phoneCode" name="phoneCode">
+                                                <option value="+55" selected>+55</option>
+                                            </select>
+                                            <span>  </span>
+                                          <input type="text" class="form-control" placeholder="Phone" id="phone" name="phone">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="slot_duration">Slot Duration<span class="text-danger">*</span></label>
+                                        <select class="select2 form-select select2-multiple" id="slot_duration" name="slot_duration" data-placeholder="Choose ...">
+                                            <option value="60">1 Hours</option>
+                                            <option value="120">2 Hours</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="status">Status<span class="text-danger">*</span></label>
+                                        <select class="select2 form-select select2-multiple" id="statusBroker" name="statusBroker" data-placeholder="Choose ...">
+                                            <option value="active">Active</option>
+                                            <option value="inactive">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card pb-5">
+                <div class="card-body">
+                    <div class="bg-light px-3 pt-3 mb-4">
+                        <h4 class="card-title mb-4">Add Time Slots</h4>
+                        <div class="row align-items-end">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-md-6 col-xl-3">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="days">Days</label>
+                                            <select class="select2 form-select select2-multiple" id="days" name="days" data-placeholder="Choose ...">
+                                                <option value="">--Select--</option>
+                                                <option value="Monday">Mon</option>
+                                                <option value="Tuesday">Tue</option>
+                                                <option value="Wednesday">Wed</option>
+                                                <option value="Thursday">Thu</option>
+                                                <option value="Friday">Fri</option>
+                                                <option value="Saturday">Sat</option>
+                                                <option value="Sunday">Sun</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-xl-3">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="start_time">Start Time</label>
+                                            <input type="text" class="form-control" id="start_time" placeholder="hh:mm" name="start_time" onkeypress="return isNumber(event)" readonly="true" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-xl-3">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="end_time">End Time</label>
+                                            <input type="text" class="form-control" id="end_time" placeholder="hh:mm" name="end_time" onkeypress="return isNumber(event)" readonly="true" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-xl-3">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="setSchedule">Set A Schedule</label>
+                                            <select class="select2 form-select select2-multiple" id="setSchedule" name="setSchedule" data-placeholder="Choose ...">
+                                                <option value="">--Select--</option>
+                                                <option value="0">Set for leftover days</option>
+                                                <option value="1">Set for all days</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
+                            <!-- <div class="col-auto">
+                                <div class="mb-3">
+                                    <button type="button" class="btn btn-success px-4">Add</button>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                    <!--
+                    <div class="row mt-4">
+                        <div class="col-lg-10">
+                            <div class="">
+                                <div class="row align-items-center mb-4">
+                                    <div class="col-md-6">
+                                        <h4 class="card-title">Available Time Slots</h4>
+                                    </div>
+                                    <div class="col-md-6 text-md-end">
+                                        <button type="button" class="btn btn-danger" title="Delete">Delete</button>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive border border-bottom-0">
+                                    <table class="table mb-0 align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th class="fw-bold"><input class="form-check-input" type="checkbox" value="" id="invalidtooltipCheck" required=""> <span class="ps-2">Days</span></th>
+                                                <th class="fw-bold">Start</th>
+                                                <th class="fw-bold">End</th>
+                                                <th class="fw-bold">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="" id="invalidtooltipCheck" required="">
+                                                        <label class="form-check-label" for="invalidtooltipCheck"> Monday </label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="bg-light py-3 px-3 d-flex flex-column">
+                                                        9:00am
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="bg-light py-3 px-3 d-flex flex-column">
+                                                        5:30pm
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn border-0 py-2 px-3" title="Delete"><i class="mdi mdi-delete font-size-18"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="" id="invalidtooltipCheck" required="">
+                                                        <label class="form-check-label" for="invalidtooltipCheck"> Tuesday </label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="bg-light py-3 px-3 d-flex flex-column">
+                                                        9:00am
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="bg-light py-3 px-3 d-flex flex-column">
+                                                        5:30pm
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn border-0 py-2 px-3" title="Delete"><i class="mdi mdi-delete font-size-18"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="" id="invalidtooltipCheck" required="">
+                                                        <label class="form-check-label" for="invalidtooltipCheck"> Wednesday </label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="bg-light py-3 px-3 d-flex flex-column">
+                                                        9:00am
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="bg-light py-3 px-3 d-flex flex-column">
+                                                        5:30pm
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn border-0 py-2 px-3" title="Delete"><i class="mdi mdi-delete font-size-18"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="" id="invalidtooltipCheck" required="">
+                                                        <label class="form-check-label" for="invalidtooltipCheck"> Thursday </label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="bg-light py-3 px-3 d-flex flex-column">
+                                                        9:00am
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="bg-light py-3 px-3 d-flex flex-column">
+                                                        5:30pm
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn border-0 py-2 px-3" title="Delete"><i class="mdi mdi-delete font-size-18"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="" id="invalidtooltipCheck" required="">
+                                                        <label class="form-check-label" for="invalidtooltipCheck"> Friday </label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="bg-light py-3 px-3 d-flex flex-column">
+                                                        9:00am
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="bg-light py-3 px-3 d-flex flex-column">
+                                                        5:30pm
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn border-0 py-2 px-3" title="Delete"><i class="mdi mdi-delete font-size-18"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="" id="invalidtooltipCheck" required="">
+                                                        <label class="form-check-label" for="invalidtooltipCheck"> Saturday </label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="bg-light py-3 px-3 d-flex flex-column">
+                                                        9:00am
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="bg-light py-3 px-3 d-flex flex-column">
+                                                        5:30pm
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn border-0 py-2 px-3" title="Delete"><i class="mdi mdi-delete font-size-18"></i></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="" id="invalidtooltipCheck" required="">
+                                                        <label class="form-check-label" for="invalidtooltipCheck"> Sunday </label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="bg-light py-3 px-3 d-flex flex-column">
+                                                        9:00am
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="bg-light py-3 px-3 d-flex flex-column">
+                                                        5:30pm
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn border-0 py-2 px-3" title="Delete"><i class="mdi mdi-delete font-size-18"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    -->
+                </div>
+            </div>
+        </form>
+    </div>
+<%- contentFor('FooterJs') %>
+
+    <!-- jQuery (required before validation) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- jQuery Validation Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/metismenu@3.0.7/dist/metisMenu.min.js"></script>
+
+
+    <script src="public/assets/libs/tinymce/tinymce.min.js"></script>
+
+    <script src="public/assets/js/pages/form-editor.init.js"></script>
+
+    <script src="public/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+
+    <script src="public/assets/libs/select2/js/select2.min.js"></script>
+
+    <script src="public/assets/libs/spectrum-colorpicker2/spectrum.min.js"></script>
+
+    <script src="public/assets/js/pages/form-advanced.init.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.8/js/intlTelInput-jquery.min.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+
+    <script>
+        function showNotification(type, message) {
+          Swal.fire({
+            toast: true,
+            position: "top-end",
+            icon: type,
+            title: message,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+          });
+        }
+        
+        function previewLogo(event) {
+            const [file] = event.target.files;
+            if (file) {
+                document.getElementById('logoPreview').src = URL.createObjectURL(file);
+            }
+        }
+        document.getElementById('backBtn').addEventListener('click', function () {
+            const params = new URLSearchParams(window.location.search);
+            params.delete('brokerId'); // Remove brokerId
+            const newQueryString = params.toString();
+            params.size === 0 ? window.location.href = `/brokersList` : window.location.href = `/brokersList?${newQueryString}`;
+        });
+    </script>
+
+<script type="text/javascript">
+    
+    $(document).ready(function(){
+        const API_URL = '/schedule';
+        const totalTimeSlot = 7;
+        let countFields = 1;
+        
+        $('#start_time, #end_time').timepicker({
+            timeFormat: 'H:mm',
+            interval: 60,
+            dynamic: false,
+            dropdown: true,
+            scrollbar: true
+        });
+
+        
+        // Reset selection on change
+        $('#setSchedule').on('change', () => $('#days').val(''));
+        $('#days').on('change', () => $('#setSchedule').val(''));
+
+        function timeToMinutes(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            return hours * 60 + minutes;
+        }
+        
+        $("#addBroker").validate({
+            errorClass: 'is-invalid',
+            validClass: 'is-valid',
+            errorElement: 'div',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                if (element.hasClass('select2-hidden-accessible')) {
+                    error.insertAfter(element.next('.select2'));
+                } else if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            rules: {
+                name: {
+                    required: true,
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                password: {
+                    required: true,
+                    minlength: 6
+                },
+                phone: {
+                    required: true,
+                    minlength: 8,
+                    number: true
+                },
+                phoneCode: {
+                    required: true,
+                },
+                image: {
+                    required: true,
+                },
+                slot_duration: { required: true },
+                start_time: { required: true },
+                end_time: { required: true },
+                setSchedule: { required: true },
+            },
+            messages: {
+                "name": {
+                    required: "Broker name is required!",
+                    minlength: "Minimum password length shoulb be 10 digits or characters."
+                },
+                "email": {
+                    required: "Broker email is required!",
+                    email: "Please enter a valid email address!"
+                },
+                "password": {
+                    required: "Password is required!",
+                    minlength: "Password must be at least 6 characters long!"
+                },
+                "phone": {
+                    required: "Broker phone is required!",
+                    minlength: "Minimum phone number length should be 15 digits.",
+                    number: "Please enter a valid phone number!"
+                },
+                "phoneCode": {
+                    required: "Phone code is required!",
+                },
+                "image": {
+                    required: "Broker image is required!",
+                },
+                "slot_duration": {
+                    required: "Please select slot duration!"
+                },
+                "start_time": {
+                    required: "Start time is required!"
+                },
+                "end_time": {
+                    required: "End time is required!"
+                },
+                "setSchedule": {
+                    required: "Schedule is required!"
+                }
+            },
+            submitHandler: function (form, event) {
+                event.preventDefault();
+
+                // Collect schedule values
+                const day = $('#days').val();
+                const setSchedule = $('#setSchedule').val();
+                const startTime = $('#start_time').val();
+                const endTime = $('#end_time').val();
+                const slotDuration = $('#slot_duration').val();
+
+                // Schedule validation
+                if (!startTime || !endTime || (!day && setSchedule === '')) {
+                    //showNotification('error', 'Please fill all schedule fields.');
+                    Swal.fire("", "Please fill all schedule fields.", "error");
+                    return false;
+                }
+
+                const startMinutes = timeToMinutes(startTime);
+                const endMinutes = timeToMinutes(endTime);
+
+                if (startMinutes === endMinutes) {
+                    //showNotification('error', 'Start and End time cannot be the same.');
+                    Swal.fire("", "Start and End time cannot be the same.", "error");
+                    return false;
+                }
+
+                if (startMinutes >= endMinutes) {
+                    //showNotification('error', 'Start time must be earlier than End time.');
+                     Swal.fire("", "Start time must be earlier than End time.", "error");
+                    return false;
+                }
+
+                const applyTo = setSchedule === '1' ? 'all' : setSchedule === '0' ? 'remaining' : 'single';
+
+                jQuery(".loader").fadeIn();
+
+                const formData = new FormData(form);
+
+                formData.append('status', $('#statusBroker').val());
+                // Append schedule data manually
+                formData.append('startTime', startTime);
+                formData.append('endTime', endTime);
+                formData.append('applyTo', applyTo);
+                formData.append('day', day);
+                formData.append('timeZone', 'UTC');
+                $('#status').fadeIn();
+                $('#preloader').fadeIn('slow');
+                jQuery.ajax({
+                    url: '/saveBroker',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json',
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    success: function (response) {
+                        if (response.status == "success") {
+                            //showNotification("success", response.message);
+                            //window.location.href = "/brokers";
+                             Swal.fire("", response.message || 'Broker added successFully', "success");
+                            setTimeout(() => {
+                            const params = new URLSearchParams(window.location.search);
+                            params.delete('brokerId'); // Remove brokerId
+                            const newQueryString = params.toString();
+                            params.size === 0 ? window.location.href = `/brokersList` : window.location.href = `/brokersList?${newQueryString}`;
+                             }, 2000);
+                            $('#status').fadeOut();
+                            $('#preloader').fadeOut('slow');
+                        } else {
+                            //showNotification("info", response.message);
+                             Swal.fire("", response.message || 'Something went wrong.', "error");
+                        }
+                        jQuery(".loader").fadeOut();
+                    },
+                    error: (xhr) => {
+                        if (xhr.status === 401) {
+                            // Token is expired or missing
+                            //showNotification('error', 'Token is expired or missing');
+                            Swal.fire("", 'Token is expired or missing', "error");
+                            window.location.href = '/login';
+                        } else {
+                            //showNotification('error', xhr.responseJSON.message || 'An error occurred. Please try again.');
+                             Swal.fire("", xhr.responseJSON.message || 'An error occurred. Please try again.', "error");
+                        }
+                        jQuery(".loader").fadeOut();
+                    },
+                     complete: function () {
+                        $('#status').fadeOut();
+                        $('#preloader').fadeOut('slow');
+                    }
+                });
+                return false;
+            }
+                  
+        });
+    })
+</script>
+
+<%- contentFor('BottomJs') %>

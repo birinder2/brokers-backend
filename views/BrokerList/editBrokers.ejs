@@ -1,0 +1,601 @@
+<%- contentFor('HeaderCss') %>
+    <!-- Sweet Alert-->
+    <link href="public/assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css">
+    <link href="public/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css">
+    <link href="public/assets/libs/spectrum-colorpicker2/spectrum.min.css" rel="stylesheet" type="text/css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.8/css/intlTelInput.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+
+<%- contentFor('breadcrumb') %>
+
+<%- contentFor('body') %>
+<div class="pt-5">
+    <form id="editBrokerForm">
+        <div class="sticky-save-container text-end">
+            <!-- <button type="button" class="btn btn-blue-grey waves-effect waves-light me-1" id="backBtn">Back</button> -->
+            <button type="submit" id="updateBroker" class="btn btn-success waves-effect waves-light">Save Changes</button>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Broker Information</h4>
+                <p class="card-title-desc">Fill information below (<strong>*</strong>) are required fields.</p>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <div class="mb-3">
+                                    <label class="form-label" for="image">Broker Profile Image</label>
+                                    <div class="view-image bg-light d-flex align-items-center justify-content-center" style="width: 150px; height: 150px;">
+                                        <% if (salesman.image && salesman.image.startsWith('http')) { %>
+                                            <img id="logoPreview" src="<%= salesman.image %>" alt="Logo Preview" class="img-fluid" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                                        <% } else if (salesman.image) { %>
+                                                <img id="logoPreview" src="public/uploads/brokers/<%= salesman.image %>" alt="Logo Preview" class="img-fluid" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                                        <% } else { %>
+                                                <img id="logoPreview" src="public/assets/images/laik/no-image.webp" alt="Logo Preview" class="img-fluid" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                                        <% } %>
+                                    </div>
+                                    <input type="file" name="image" id="image" class="form-control d-none" onchange="previewLogo(event)">
+                                    <label role="button" for="image" class="btn btn-blue-grey mt-3">Change Logo</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label" for="name">Broker Name<span class="text-danger">*</span></label>
+                                    <input id="name" name="name" type="text" class="form-control" value="<%= salesman.name %>">
+                                    <div class="invalid-feedback" id="nameError">Name is required!</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label" for="email">Broker Email<span class="text-danger">*</span></label>
+                                    <input id="email" name="email" type="text" value="<%= salesman.email %>" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">                                
+                                <div class="form-group">
+                                    <label for="role" class="form-label">Phone Number<span class="text-danger">*</span></label>
+            
+                                    <div class="input-group mb-3">
+                                        <select class="input-group-text" id="phoneCode" name="phoneCode">
+                                            <option value="+55" <%= salesman.phoneCode === '+55' ? 'selected' : '' %> >+55</option>
+                                        </select>
+                                        <span>  </span>
+                                      <input type="text" class="form-control" placeholder="Phone" id="phone" name="phone"  value="<%= salesman.phone %>"aria-label="phone" aria-describedby="basic-addon23">
+                                    </div>
+                                    <div class="invalid-feedback" id="phoneError">Phone is required!</div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label" for="slot_duration">Slot Duration<span class="text-danger">*</span></label>
+                                    <select class="select2 form-select select2-multiple" id="slot_duration" name="slot_duration" data-placeholder="Choose ...">
+                                        <option value="60" <%= salesman.slot_duration === 60 ? 'selected' : '' %>>1 Hour</option>
+                                        <option value="120" <%= salesman.slot_duration === 120 ? 'selected' : '' %>>2 Hours</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label" for="status">Status<span class="text-danger">*</span></label>
+                                    <select class="select2 form-select select2-multiple" id="statusBroker" name="statusBroker" data-placeholder="Choose ...">
+                                        <option value="active" <%= salesman.status === 'active' ? 'selected' : '' %>>Active</option>
+                                        <option value="inactive" <%= salesman.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="bg-light px-3 pt-3 mb-4">
+                    <h4 class="card-title mb-4">Add Time Slots</h4>
+                    <input type="hidden" id="salesId" value="<%= salesId %>">
+                    <div class="row align-items-end">
+                        <div class="col-xl">
+                            <div class="row">
+                                <div class="col-md-6 col-xl-3">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="days">Days</label>
+                                        <select class="select2 form-select select2-multiple" id="days" name="days" data-placeholder="Choose ...">
+                                            <option value="">--Select--</option>
+                                            <option value="Monday">Mon</option>
+                                            <option value="Tuesday">Tue</option>
+                                            <option value="Wednesday">Wed</option>
+                                            <option value="Thursday">Thu</option>
+                                            <option value="Friday">Fri</option>
+                                            <option value="Saturday">Sat</option>
+                                            <option value="Sunday">Sun</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-xl-3">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="start_time">Start Time</label>
+                                        <input id="start_time" placeholder="hh:mm" name="start_time" onkeypress="return isNumber(event)" readonly="true" value="" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-xl-3">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="end_time">End Time</label>
+                                        <input id="end_time" placeholder="hh:mm" name="end_time" onkeypress="return isNumber(event)" readonly="true" value="" class="form-control">
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 col-xl-3">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="setSchedule">Set A Schedule</label>
+                                        <select class="select2 form-select select2-multiple" id="setSchedule" name="setSchedule" data-placeholder="Choose ...">
+                                            <option value="">--Select--</option>
+                                            <option value="0">Set for leftover days</option>
+                                            <option value="1">Set for all days</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div> 
+                        </div>
+                        <div class="col-auto">
+                            <div class="mb-3">
+                                <button type="button" id="addTimeSlots" class="btn btn-success px-4">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-lg-12">
+                        <div id="timeSlotsRendering"></div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<%- contentFor('FooterJs') %>
+
+    <!--tinymce js-->
+    <script src="public/assets/libs/tinymce/tinymce.min.js"></script>
+
+    <!-- init js -->
+    <script src="public/assets/js/pages/form-editor.init.js"></script>
+
+    <!-- Sweet Alerts js -->
+    <script src="public/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+
+    <script src="public/assets/libs/select2/js/select2.min.js"></script>
+
+    <script src="public/assets/libs/spectrum-colorpicker2/spectrum.min.js"></script>
+
+    <script src="public/assets/js/pages/form-advanced.init.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.8/js/intlTelInput-jquery.min.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+
+
+    <script>
+        var setTimeoutVar;
+        function showNotification(type, message) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: type,
+                title: message,
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+        }
+        
+        $(document).ready(function () {
+            const API_URL = '/schedule';
+            const totalTimeSlot = 7;
+            let countFields = 1;
+            $('#setSchedule').select2({ placeholder: "Choose ..." });
+            $('#days').select2({ placeholder: "Choose ..." });
+            //$('#setSchedule').select2();
+            //$('#days').select2();
+            // const salesman = "<%- JSON.stringify(salesman) %>"
+            // console.log("salesman",salesman);
+            // Time pickers
+            $('#start_time, #end_time').timepicker({
+                timeFormat: 'H:mm',
+                interval: 60,
+                dynamic: false,
+                dropdown: true,
+                scrollbar: true
+            });
+        
+            // Reset selection on change
+            // $('#setSchedule').on('change', () => $('#days').val(''));
+            // $('#days').on('change', () => $('#setSchedule').val(''));
+           let isResetting = false;
+
+            $('#setSchedule').on('change', function () {
+                if (isResetting) return;
+                isResetting = true;
+                $('#days').val('').trigger('change.select2'); // Use Select2-specific trigger
+                isResetting = false;
+            });
+
+            $('#days').on('change', function () {
+                if (isResetting) return;
+                isResetting = true;
+                $('#setSchedule').val('').trigger('change.select2'); // Use Select2-specific trigger
+                isResetting = false;
+            });
+        
+        
+            const clearFields = () => {
+                $('#days, #setSchedule').val('');
+                $('#start_time, #end_time').val('');
+            };
+        
+            const postSchedule = (data) => {
+                $.ajax({
+                    url: API_URL,
+                    method: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    beforeSend: () => $(".loader").fadeIn(),
+                    complete: () => $(".loader").fadeOut(),
+                    success: (res) => {
+                        if (res.success) {
+                            console.log("res",res.data)
+                            renderSchedules(res.data);
+                            clearFields();
+                        } else {
+                            //showNotification('error', res.message || 'Something went wrong.');
+                            Swal.fire("", res.message || 'Something went wrong.', "error");
+                        }
+                    },
+                    error: (xhr) => {
+                        if (xhr.status === 401) {
+                            // Token is expired or missing
+                            //showNotification('error', 'Token is expired or missing');
+                            Swal.fire("", 'Token is expired or missing', "error");
+                            window.location.href = '/';
+                        } else {
+                            //showNotification('error', 'Server error on delete.');
+                            Swal.fire("", 'An error occurred. Please try again.', "error");
+
+                        }
+                    }
+                });
+            };
+        
+            const renderSchedules = (data) => {
+                const container = $('#timeSlotsRendering');
+                container.empty();
+
+                const dayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+                // Sort the data by proper weekday order
+                data.sort((a, b) => dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day));
+
+                let html = `
+                    <div class="row align-items-center mb-4">
+                        <div class="col-md-6">
+                            <h4 class="card-title">Available Time Slots</h4>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <button type="button" class="btn btn-danger" id="deleteSelected" title="Delete">Delete</button>
+                        </div>
+                    </div>
+                    <div class="table-responsive border border-bottom-0">
+                        <table class="table mb-0 align-middle">
+                            <thead>
+                                <tr>
+                                    <th class="fw-bold">
+                                        <input class="form-check-input" type="checkbox" id="selectAll"> 
+                                        <span class="ps-2">Days</span>
+                                    </th>
+                                    <th class="fw-bold">Start - End</th>
+                                    <th class="fw-bold">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                data.forEach((day, index) => {
+                    const slots = day.slots.map(slot => `${slot.startTime} – ${slot.endTime}`).join(' | ');
+                    const dayKey = `${day.day}_${index}`;
+                    html += `
+                        <tr>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input schedule-checkbox" type="checkbox" id="${dayKey}" data-day="${day.day}">
+                                    <label class="form-check-label" for="${dayKey}">${day.day}</label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="bg-light py-3 px-3 d-flex flex-column">
+                                    ${slots}
+                                </div>
+                            </td>
+                            <td>
+                                <button type="button" class="btn border-0 py-2 px-3 delete-btn" title="Delete" data-day="${day.day}">
+                                    <i class="mdi mdi-delete font-size-18"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+                container.append(html);
+
+                // Event bindings
+                $('#selectAll').on('change', function () {
+                    $('.schedule-checkbox').prop('checked', this.checked);
+                });
+
+                $('#deleteSelected').on('click', function () {
+                    const selectedDays = $('.schedule-checkbox:checked').map(function () {
+                        return $(this).data('day');
+                    }).get();
+
+                    if (selectedDays.length === 0) {
+                        Swal.fire("", 'No schedules selected.', "error");
+                        return
+                    }
+
+                    deleteSchedules(selectedDays);
+                });
+
+                $('.delete-btn').on('click', function () {
+                    const day = $(this).data('day');
+                    deleteSchedules([day]);
+                });
+
+                const deleteSchedules = (days) => {
+                    const salesId = $('#salesId').val();
+                    if (!salesId || days.length === 0) {
+                         Swal.fire("", 'Missing salesId or no days selected.', "error");
+                         //showNotification('error', 'Missing salesId or no days selected.');
+                        return
+                    }
+                    $.ajax({
+                        url: `${API_URL}/delete`,
+                        method: 'POST',
+                        data: JSON.stringify({ days, salesId }),
+                        contentType: 'application/json',
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        success: (res) => {
+                            if (res.success) {
+                                renderSchedules(res.data);
+                                //showNotification('success', 'Schedule(s) deleted successfully.');
+                                Swal.fire("", 'Schedule(s) deleted successfully.', "success");
+                            } else {
+                                //showNotification('error', res.message || 'Delete failed.');
+                                Swal.fire("", res.message || 'Delete failed.', "error");
+                            }
+                        },
+                        error: (xhr) => {
+                            if (xhr.status === 401) {
+                                // Token is expired or missing
+                                //showNotification('error', 'Token is expired or missing');
+                                Swal.fire("", 'Token is expired or missing', "error");
+                                window.location.href = '/';
+                            } else {
+                                Swal.fire("", 'An error occurred. Please try again.', "error");
+                                //showNotification('error', 'Server error on delete.');
+                            }
+                        }
+                    });
+                };
+            };
+
+            $('#addTimeSlots').on('click', function (e) {
+                e.preventDefault();
+                const day = $('#days').val();
+                const setSchedule = $('#setSchedule').val();
+                const startTime = $('#start_time').val();
+                const endTime = $('#end_time').val();
+                const timeZone = $('#time_zone').val();
+                const salesId = $('#salesId').val();
+    
+        
+                if (!salesId|| !startTime || !endTime || (!day && setSchedule === '')) {
+                    Swal.fire("", 'Please fill all fields.', "error");
+                    return
+                }
+        
+                const startMinutes = timeToMinutes(startTime);
+                const endMinutes = timeToMinutes(endTime);
+    
+                if (startMinutes === endMinutes) {
+                    Swal.fire("", 'Start and End time cannot be the same.', "error");
+                    return
+                }
+    
+                if (startMinutes >= endMinutes) {
+                    Swal.fire("", 'Start time must be earlier than End time.', "error");
+                    return
+                }
+        
+                if (countFields >= totalTimeSlot) {
+                    Swal.fire("", 'Max slots reached.', "error");
+                    return 
+                }
+        
+                const payload = {
+                    startTime,
+                    endTime,
+                    timeZone,
+                    applyTo: setSchedule === '1' ? 'all' : setSchedule === '0' ? 'remaining' : 'single',
+                    day,
+                    salesId
+                };
+        
+                postSchedule(payload);
+                countFields++;
+            });
+    
+            function timeToMinutes(timeStr) {
+                const [hours, minutes] = timeStr.split(':').map(Number);
+                return hours * 60 + minutes;
+            }
+        
+            // Fetch initial
+            function fetchSchedules() {
+                //console.log("salesId", salesId)
+                const salesId = $('#salesId').val();
+                if (!salesId) return;
+                $.get(API_URL+'?salesId='+salesId, function (res) {
+                    if (res.success) renderSchedules(res.data);
+                });
+            }
+        
+            fetchSchedules();
+        });
+    
+        function validateBrokerForm() {
+            const name = $('#name').val().trim();
+            const phone = $('#phone').val().trim();
+            const phoneCode = $('#phoneCode').val();
+            const slotDuration = $('#slot_duration').val();
+            const image = $('#image')[0]?.files[0];
+
+            // Clear previous errors
+            $('input, textarea, select').removeClass('is-invalid');
+            $('.invalid-feedback').hide();
+        
+            if (!name) {
+                $('#name').addClass('is-invalid');
+                $('#nameError').show();
+                isValid = false;
+                return false;
+            }
+    
+            if (!phone || !/^\d+$/.test(phone)) {
+                $('#phone').addClass('is-invalid');
+                $('#phoneError').show();
+                isValid = false;
+                return false;
+            }
+        
+            if (!phoneCode) {
+                //alert('Please select a phone code.');
+                Swal.fire("", 'Please select a phone code.', "error");
+                return false;
+            }
+        
+            if (!slotDuration) {
+                //alert('Please select slot duration.');
+                Swal.fire("", 'Please select slot duration.', "error");
+                return false;
+            }
+        
+            if (image) {
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+                if (!allowedTypes.includes(image.type)) {
+                    //alert('Only JPG, JPEG, or PNG files are allowed.');
+                    Swal.fire("", 'Only JPG, JPEG, or PNG files are allowed.', "error");
+                    return false;
+                }
+            }
+        
+            return true;
+        }
+    
+        $('#editBrokerForm').on('submit', function (e) {
+            e.preventDefault();
+            if (!validateBrokerForm()) return;
+
+            //const formData = new FormData();
+            const form = this;
+            const formData = new FormData(form);
+            // formData.append('name', $('#name').val());
+            // formData.append('phone', $('#phone').val());
+            // formData.append('phoneCode', $('#phoneCode').val());
+            // formData.append('slot_duration', $('#slot_duration').val());
+            // formData.append('image', $('#image')[0].files[0]);
+            formData.append('salesId', $('#salesId').val());
+            formData.append('status', $('#statusBroker').val());
+            $('#status').fadeIn();
+            $('#preloader').fadeIn('slow');
+            $.ajax({
+                url: '/updateBroker', // Your update endpoint
+                method: 'PATCH',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                success: function (response) {
+                    if (response.success) {
+                        //showNotification("success", response.message);
+                        Swal.fire("", response.message || 'Your profile has been updated successFully', "success");
+
+                        window.location.href = '/editBroker';
+                        // setTimeout(() => {
+                        // const params = new URLSearchParams(window.location.search);
+                        // params.delete('brokerId'); // Remove brokerId
+                        // const newQueryString = params.toString();
+                        // params.size === 0 ? window.location.href = `/brokersList` : window.location.href = `/brokersList?${newQueryString}`;
+                        // }, 2000);
+
+                        $('#status').fadeOut();
+                        $('#preloader').fadeOut('slow');
+                        
+                    } else {
+                        //alert(response.message || 'Something went wrong.');
+                        Swal.fire("", response.message || 'Something went wrong.', "error");
+                    }
+                },
+                error: (xhr) => {
+                    if (xhr.status === 401) {
+                        // Token is expired or missing
+                        //showNotification('error', 'Token is expired or missing');
+                        Swal.fire("", 'Token is expired or missing', "error");
+
+                        window.location.href = '/';
+                    } else {
+                        //showNotification('error', xhr.responseJSON.message || 'An error occurred. Please try again.');
+                        Swal.fire("", xhr.responseJSON.message || 'An error occurred. Please try again.', "error");
+
+                    }
+                },
+                complete: function () {
+                    $('#status').fadeOut();
+                    $('#preloader').fadeOut('slow');
+                }
+            });
+        });
+        
+    </script>
+
+    <script>
+        function previewLogo(event) {
+            const [file] = event.target.files;
+            if (file) {
+                document.getElementById('logoPreview').src = URL.createObjectURL(file);
+            }
+        }
+    </script>
+    <script>
+        document.getElementById('backBtn').addEventListener('click', function () {
+            const params = new URLSearchParams(window.location.search);
+            params.delete('brokerId'); // Remove brokerId
+            const newQueryString = params.toString();
+            params.size === 0 ? window.location.href = `/brokersList` : window.location.href = `/brokersList?${newQueryString}`;
+        });
+    </script>
+
+<%- contentFor('BottomJs') %>

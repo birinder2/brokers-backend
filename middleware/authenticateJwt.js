@@ -40,7 +40,7 @@ const authenticateJWT = async (req,res,next) => {
         //let decode = await jwt.verify(authHeader,process.env.TOKEN_KEY);
         let decode = await verifyTokenAsync(authHeader, process.env.TOKEN_KEY);
 
-        const userId = decode.brokerId;
+        const userId = decode.backendId;
         const user = await BackendUserLogin.findById(userId);
         if(!user){
             res.clearCookie("broker_token");
@@ -51,6 +51,7 @@ const authenticateJWT = async (req,res,next) => {
             return res.redirect('/');
         }
         req.user = user;
+        req.user.salesmanId = decode.brokerId;
         next();
 
     } catch (error) {
