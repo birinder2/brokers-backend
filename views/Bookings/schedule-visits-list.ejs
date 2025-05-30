@@ -158,14 +158,8 @@
     <!-- View Appointment Modal -->
 <div class="modal fade" id="view-appointment-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Appointment Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="appointment-details-content">
-                <!-- Dynamic content will be injected here -->
-            </div>
+        <div class="modal-content" id="appointment-details-content">
+            
         </div>
     </div>
 </div>
@@ -315,16 +309,24 @@
                     </button>`; */
                 }
                 const detailsHtml = `
-                    <p><strong>Salesman:</strong> ${props.salesmanName}</p>
-                    <p><strong>Property:</strong> ${props.propertyName}</p>
-                    <p><strong>Date:</strong> ${props.appointmentDate}</p>
-                    <p><strong>Timing:</strong> ${timing}</p>
-                    <div class="text-left">
-                        <span class="badge font-size-14 text-capitalize ${statusClass}">${props.status}</span>
-                        <div class="w-100"></div>
+                    <div class="modal-header">
+                        <h5 class="modal-title d-flex">
+                            <span class="pe-3">Appointment Details</span>
+                            <div class="text-left">
+                                <span class="badge font-size-14 text-capitalize ${statusClass}">${props.status}</span>
+                                <div class="w-100"></div>
+                            </div>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    ${actionButtons}
-                `;
+                    <div class="modal-body" >
+                        <!-- Dynamic content will be injected here -->
+                        <p><strong>Broker:</strong> ${props.salesmanName}</p>
+                        <p><strong>Property:</strong> ${props.propertyName}</p>
+                        <p><strong>Date:</strong> ${props.appointmentDate}</p>
+                        <p><strong>Timing:</strong> ${timing}</p>
+                        ${actionButtons}
+                    </div>`;
 
                 $("#appointment-details-content").html(detailsHtml);
                 new bootstrap.Modal(document.getElementById("view-appointment-modal")).show();

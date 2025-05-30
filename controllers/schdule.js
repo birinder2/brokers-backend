@@ -6,10 +6,10 @@ const Salesman = require('../models/Salesman');
 const viewSchedule = async (req, res) => {
     console.log('View schedule request params:');
     const salesId = req.params.id;
-    if (!salesId) return res.status(400).json({ success: false, message: 'Salesman ID required.' });
+    if (!salesId) return res.status(400).json({ success: false, message: 'Broker ID required.' });
 
     const salesman = await Salesman.findById(salesId)
-    if (!salesman) return res.status(404).json({ success: false, message: 'Salesman not found.' });
+    if (!salesman) return res.status(404).json({ success: false, message: 'Broker not found.' });
 
     console.log('Salesman:', salesman);
     res.render('editBroker', { salesId: salesman._id,
@@ -55,7 +55,7 @@ const addScheduleOldSushil = async (req, res) => {
             }
             await salesman.save();
         } else {
-            throw new Error('Salesman not found.');
+            throw new Error('Broker not found.');
         }
     });
 
@@ -95,7 +95,7 @@ const addSchedule = async (req, res) => {
     try {
         const promises = daysToApply.map(async (d) => {
             const salesman = await Salesman.findById(salesId);
-            if (!salesman) throw new Error('Salesman not found.');
+            if (!salesman) throw new Error('Broker not found.');
 
             const existingSchedule = salesman.schedule.find(s => s.day === d);
             if (existingSchedule) {
@@ -202,7 +202,7 @@ const addSchedule = async (req, res) => {
 
 const getSchedules = async (req, res) => {
     const { salesId } = req.query;
-    if (!salesId) return res.status(400).json({ success: false, message: 'Salesman ID required.' });
+    if (!salesId) return res.status(400).json({ success: false, message: 'Broker ID required.' });
 
     const salesman = await Salesman.findById(salesId).select('schedule');
     res.json({ success: true, data: salesman.schedule });
@@ -236,7 +236,7 @@ const deleteSchedules = async (req, res) => {
         // Find the salesman by salesId
         const salesman = await Salesman.findById(salesId);
         if (!salesman) {
-            return res.status(404).json({ success: false, message: 'Salesman not found.' });
+            return res.status(404).json({ success: false, message: 'Broker not found.' });
         }
 
         // Filter out the schedules for the days to be deleted
