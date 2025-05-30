@@ -425,7 +425,8 @@ exports.saveBroker = async (req, res) => {
 };
 
 exports.editBroker = async (req, res) => {
-    const  id  = req.user.salesmanId;
+    //const  id  = req.user.salesmanId;
+    const  id  = req.user._id;
     console.log("Edit Broker ID:", req.user); // Debugging line
     try {
         const broker = await Salesman.findById(id);
