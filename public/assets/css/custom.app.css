@@ -230,11 +230,11 @@ div.dataTables_wrapper div.dataTables_filter {
     font-size: 1.40625rem !important;
 }
 
-/* Form */
+/* Lable */
 label {
-    font-weight: 500;
+    font-weight: 600 !important;
+    font-family: inherit;
 }
-
 
 /* Badge Styles */
 .badge { padding: 0.35em 0.6em !important; text-transform: capitalize; font-size: 1rem !important; font-weight: 600; box-shadow: 0px 6px 13px rgba(0, 0, 0, 0.15); }
