@@ -44,7 +44,7 @@ exports.getAppointments = async (req, res) => {
 
     let sess = req.session;
     //brokerId = (sess.broker_id)? sess.broker_id : '';
-        const  brokerId  = req.user.salesmanId;
+      const  brokerId  = req.user._id;
 
     console.log("Broker ID from session:", req.user);
     const skip = (page - 1) * limit;
