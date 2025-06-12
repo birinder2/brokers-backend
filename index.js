@@ -41,7 +41,7 @@ mongoose
   .catch((err) => console.error("MongoDB Connection Error:", err));
 
 app.use(session({
-  key: 'user_sid',
+  key: 'broker_sid',
   secret: 'somerandonstuffsi&',
   resave: false,
   saveUninitialized: false,
